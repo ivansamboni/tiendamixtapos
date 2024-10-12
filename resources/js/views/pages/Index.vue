@@ -1,0 +1,5 @@
+<template>
+
+principas
+
+</template>
