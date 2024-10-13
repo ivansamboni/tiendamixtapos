@@ -1,7 +1,5 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ShowProductController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [App\Http\Controllers\ShowProductController::class, 'carusel']);
