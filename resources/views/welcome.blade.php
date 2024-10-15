@@ -5,7 +5,6 @@
 @section('content')
     <br>
     <br>
-    <br>
     <h3 class="text-center">Productos Recientes</h3>
     <br>
     <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
@@ -19,16 +18,15 @@
                                 <div class="mx-auto" style="width: 100%;">
                                     <br>
                                     <div class="text-center">
-                                        <h6>Categoría <a class="nav-link text-primary"
-                                                href="#">{{ $pro->categoria->nombre ?? '' }}</a> </h6>
-                                                <img src="{{ asset('archivos/folder_img_product/' . ($pro['img1'] ?? 'sinimagen.jpg')) }}" 
-                                                class="card-img-top" alt="{{ $pro['nombre'] }}" 
+                                        <a class="nav-link text-dark"
+                                            href="{{ route('producto.productodetalle', ['id' => $pro['id']]) }}">
+                                            <img src="{{ asset('archivos/folder_img_product/' . ($pro['img1'] ?? 'sinimagen.jpg')) }}"
+                                                class="card-img-top" alt="{{ $pro['nombre'] }}"
                                                 style="height: 200px; object-fit: cover;">
-                                        <h6>Marca
-                                            <a class="nav-link text-primary"
-                                                href="#">{{ $pro->marca->nombre ?? '' }}</a>
-                                        </h6>
-                                        <a class="nav-link text-primary" href="#">{{ $pro['nombre'] }}</a>
+
+                                            {{ $pro['nombre'] }}
+                                        </a>
+
                                         <p class="card-text">${{ number_format($pro['precio'], 2) }}</p>
                                     </div>
                                 </div>
@@ -40,10 +38,6 @@
         </div>
 
         <!-- Controles del carrusel -->
-        <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
         <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Next</span>
@@ -56,29 +50,40 @@
 
     <div class="row justify-content-center">
         @foreach ($productoall as $pro)
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-8 d-flex">
-               
-                <div class="card mx-auto" style="width: 100%;">
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4 d-flex">
+                <div class="mx-auto" style="width: 100%;">
                     <br>
                     <div class="text-center">
-                        <h6>Categoría <a class="nav-link text-primary"
-                                href="#">{{ $pro->categoria->nombre ?? '' }}</a> </h6>
+                        <a class="nav-link text-primary"
+                            href="{{ route('categoria.categoriatodo', ['id' => $pro->categoria_id ?? '0']) }}">
+                            {{ $pro->categoria->nombre ?? '' }}
+                        </a>
+
                     </div>
-                    <img src="{{ asset('archivos/folder_img_product/' . ($pro['img1'] ?? 'sinimagen.jpg')) }}" class="card-img-top"
-                        alt="{{ $pro['nombre'] }}" style="height: 200px; object-fit: cover;">
-                    <div class="card-body text-center">
-                        <h6>Marca
-                            <a class="nav-link text-primary" href="#">{{ $pro->marca->nombre ?? '' }}</a>
-                        </h6>
-                        <a class="nav-link text-primary" href="#">{{ $pro['nombre'] }}</a>
-                        <p class="card-text">${{ number_format($pro['precio'], 2) }}</p>
-                    </div>
+                    <a class="nav-link text-primary" href="{{ route('producto.productodetalle', ['id' => $pro['id']]) }}">
+                        <img src="{{ asset('archivos/folder_img_product/' . ($pro['img1'] ?? 'sinimagen.jpg')) }}"
+                            class="card-img-top" alt="{{ $pro['nombre'] }}" style="height: 200px; object-fit: cover;">
+                        <div class="text-center">
+                            {{ $pro['nombre'] }}
+                    </a>
+                    <a class="nav-link text-primary"
+                        href="{{ route('marca.marcatodo', ['id' => $pro->marca_id ?? '0']) }}">{{ $pro->marca->nombre ?? '' }}</a>
+                    <p class="card-text">${{ number_format($pro['precio']) }}</p>
+
                 </div>
             </div>
-        @endforeach
+       </div>
+    @endforeach
     </div>
+
     <br>
     <br>
-    {{ $productoall->links() }}
+
+    <div class="d-flex justify-content-center my-4">
+        {{ $productoall->links('vendor.pagination.custom') }}
+    </div>
+
+
+
 
 @endsection

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="utf-8">
@@ -11,10 +11,6 @@
     <meta name="keywords" content="">
     <meta name="description" content="">
     <title>@yield('title', 'Laravel + Bootstrap')</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900" rel="stylesheet"
         defer>
 
@@ -24,35 +20,20 @@
     <!-- Scripts de Bootstrap -->
     <script src="{{ asset('bootstrap/js/bootstrap.bundle.min.js') }}" defer></script>
     <link href="{{ asset('bootstrap/bootstrap-icons/font/bootstrap-icons.css') }}" rel="stylesheet">
+    <link href="{{ asset('bootstrap/app.css') }}" rel="stylesheet">
 
     @stack('styles') <!-- Para estilos adicionales desde las vistas -->
 </head>
-<style>
-    body {
-        font-family: 'Poppins', sans-serif;
-        background-color: rgb(248, 255, 255);
-    }
-
-    .navbar-brand {
-        font-family: 'Poppins', sans-serif;
-        font-weight: 700;
-        /* Aplica peso 700 para esta clase */
-    }
-</style>
 
 <body>
-    <h6 class="text-danger">¡ No necesitas registraterte para comprar !</h6>
-    <nav class="navbar navbar-expand-md navbar-light bg-light shadow-sm fixed-top">
+    <nav class="navbar navbar-expand-md navbar-secundary bg-secundary shadow-sm">
 
         <div class="container">
             <!-- Logo alineado a la izquierda -->
-            <a class="navbar-brand" href="#">
-                <img src="//sexosentido.co/cdn/shop/files/presthemes-gomarket-prestashop-theme-logo-1522562518_1_2bf7bfe4-29f5-449f-9672-9d269039fee1_200x.png?v=1630619170"
-                    srcset="//sexosentido.co/cdn/shop/files/presthemes-gomarket-prestashop-theme-logo-1522562518_1_2bf7bfe4-29f5-449f-9672-9d269039fee1_200x.png?v=1630619170 1x, 
-                             //sexosentido.co/cdn/shop/files/presthemes-gomarket-prestashop-theme-logo-1522562518_1_2bf7bfe4-29f5-449f-9672-9d269039fee1_400x.png?v=1630619170 2x"
-                    alt="Logo" width="200" style="top:0px;">
-            </a>
-            
+            <a class="navbar-brand" href="/">
+                <img src="{{ asset('archivos/images/tecnostore.png') }}"                   
+                    alt="Logo" width="200" style="top:0px;"></a>
+
             <!-- Botón de colapso para dispositivos pequeños -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -70,8 +51,8 @@
                             CATEGORÍAS
                         </a>
                         <ul class="dropdown-menu">
-                            @foreach ($categoria as $cat)
-                                <li><a class="dropdown-item text-danger" href="#">{{ $cat['nombre'] }}</a></li>
+                            @foreach ($categorias as $cat)
+                                <li><a class="dropdown-item text-danger" href="{{ route('categoria.categoriatodo', ['id' => $cat['id']]) }}">{{ $cat['nombre'] }}</a></li>
                             @endforeach
                         </ul>
                     </li>
@@ -82,8 +63,8 @@
                             MARCAS
                         </a>
                         <ul class="dropdown-menu">
-                            @foreach ($marca as $mar)
-                                <li><a class="dropdown-item text-danger" href="#">{{ $mar['nombre'] }}</a></li>
+                            @foreach ($marcas as $mar)
+                                <li><a class="dropdown-item text-danger" href="{{ route('marca.marcatodo', ['id' => $mar['id']]) }}">{{ $mar['nombre'] }}</a></li>
                             @endforeach
                         </ul>
                     </li>
@@ -101,13 +82,13 @@
                     <button class="btn btn-danger" type="submit">
                         <i class="bi bi-search"></i>
                     </button>
-                </form>              
-            </div>                      
-        
+                </form>
+            </div>
+
         </div>
-       
-            
-       
+
+
+
     </nav>
 
 
