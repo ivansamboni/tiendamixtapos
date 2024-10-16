@@ -11,7 +11,7 @@ class SearchController extends Controller
     {
         $productos = Producto::select('id', 'nombre', 'precio', 'stock')
             ->where(function ($query) use ($nombre) {
-                $query->where('nombre', 'like', $nombre . '%');
+                $query->where('nombre', 'like', '%' . $nombre . '%');
             })
             ->get();
 

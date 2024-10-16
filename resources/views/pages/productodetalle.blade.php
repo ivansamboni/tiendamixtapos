@@ -5,8 +5,8 @@
 @section('content')
     <div class="container my-5">
         <div class="row justify-content-center">
-            <div class="col-md-10">
-                <div class="card shadow">
+            <div class="col-md-12">
+                <div class="card rounded-0">
                     <div class="row g-0">
                         <!-- Columna de imágenes del producto -->
                         <div class="col-md-6">
@@ -15,16 +15,16 @@
                                     <!-- Thumbnails (de arriba hacia abajo) -->
                                     <div class="col-md-12 ">
                                         <img src="{{ $producto->img1 ? asset('archivos/folder_img_product/' . $producto->img1) : asset('archivos/folder_img_product/sinimagen.jpg') }}"
-                                            alt="{{ $producto->nombre }}" style="height: 80px; object-fit: cover;"
+                                            alt="" style="height: 80px; object-fit: cover;"
                                             onmouseover="changeImage(this.src)" class="thumbnail rounded">
                                         <img src="{{ $producto->img2 ? asset('archivos/folder_img_product/' . $producto->img2) : asset('archivos/folder_img_product/sinimagen.jpg') }}"
-                                            alt="{{ $producto->nombre }}" style="height: 80px; object-fit: cover;"
+                                            alt="" style="height: 80px; object-fit: cover;"
                                             onmouseover="changeImage(this.src)" class="thumbnail rounded">
                                         <img src="{{ $producto->img3 ? asset('archivos/folder_img_product/' . $producto->img3) : asset('archivos/folder_img_product/sinimagen.jpg') }}"
-                                            alt="{{ $producto->nombre }}" style="height: 80px; object-fit: cover;"
+                                            alt="" style="height: 80px; object-fit: cover;"
                                             onmouseover="changeImage(this.src)" class="thumbnail rounded">
                                         <img src="{{ $producto->img4 ? asset('archivos/folder_img_product/' . $producto->img4) : asset('archivos/folder_img_product/sinimagen.jpg') }}"
-                                            alt="{{ $producto->nombre }}" style="height: 80px; object-fit: cover;"
+                                            alt="" style="height: 80px; object-fit: cover;"
                                             onmouseover="changeImage(this.src)" class="thumbnail rounded">
                                     </div>
                                     <div class="col-md-12 text-center">
@@ -74,7 +74,7 @@
 
                 <!-- Descripción del producto -->
                 <br>
-                <div class="card mb-3 shadow">
+                <div class="card rounded-0">
                     <div class="card-body">
                         <h5 class="card-title navbar-brand">Descripción</h5>
                         <p class="text-left">{!! nl2br(e($producto->descripcion)) !!}</p>
@@ -90,7 +90,7 @@
     <!-- Modal -->
     <div class="modal fade" id="ampliarimagen" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-dialog modal-dialog-centered modal-lg rounded-0">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

@@ -14,7 +14,7 @@
 
 body {
     font-family: 'Poppins', sans-serif;
-    background-color: rgb(255, 255, 255);
+    background-color:#ededed;
 }
 
 .navbar-brand {
@@ -23,6 +23,82 @@ body {
     font-size: 14px;
     /* Aplica peso 700 para esta clase */
 }
+
+/* Navbar personalizado */
+.custom-navbar {
+    background-color: #ffffff;  /* Fondo blanco */
+    padding: 10px 20px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.navbar-brand img {
+    height: 50px;
+    transition: transform 0.3s ease;
+}
+
+.navbar-brand img:hover {
+    transform: scale(1.05);  /* Efecto al pasar el cursor */
+}
+
+.nav-link {
+    color: #333;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #e63946;  /* Rojo suave al pasar el cursor */
+}
+
+.dropdown-menu {
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-item {
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #e63946;
+}
+
+/* Estilos del formulario de búsqueda */
+.search-input {
+    border-radius: 25px;
+    border: 1px solid #ddd;
+    padding: 8px 15px;
+    transition: box-shadow 0.3s ease;
+}
+
+.search-input:focus {
+    box-shadow: 0 0 5px rgba(230, 57, 70, 0.5);
+    border-color: #e63946;
+}
+
+.btn-search {
+    background-color: #e63946;
+    color: #fff;
+    border-radius: 25px;
+    padding: 8px 15px;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn-search:hover {
+    background-color: #d62839;
+}
+
+/* Botón de colapso */
+.navbar-toggler {
+    border-color: #ddd;
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23333' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(51,51,51,0.7)' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
 
 .botonCompra {
 	box-shadow: 0px 10px 14px -7px #fc5f5a;
@@ -90,7 +166,29 @@ body {
     color: white;
 }
 
+.product-card {
+    overflow: hidden;  /* Asegura que el zoom no desborde los bordes */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 
+/* Zoom al pasar el cursor */
+.product-card:hover {
+    transform: scale(1.10);  /* Aumenta ligeramente el tamaño */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);  /* Agrega sombra para mayor efecto */
+}
+
+/* Imagen dentro de la tarjeta */
+.product-image {
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+}
+
+/* Zoom en la imagen también */
+.product-card:hover .product-image {
+    transform: scale(1.1);  /* Zoom adicional en la imagen */
+}
       
 
       
