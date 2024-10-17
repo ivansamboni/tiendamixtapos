@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Producto extends Model
 {
@@ -35,6 +36,17 @@ class Producto extends Model
     public function proveedor(): BelongsTo
     {
         return $this->belongsTo(Proveedor::class);
+    }
+
+    protected static function booted()
+    {
+        static::creating(function ($producto) {
+            $producto->slug = Str::slug($producto->nombre);  // Generar slug al crear
+        });
+
+        static::updating(function ($producto) {
+            $producto->slug = Str::slug($producto->nombre);  // Actualizar slug si cambia el nombre
+        });
     }
 }
 

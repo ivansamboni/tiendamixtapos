@@ -48,7 +48,7 @@
                         </a>
                         <ul class="dropdown-menu">
                             @foreach ($categorias as $cat)
-                                <li><a class="dropdown-item" href="{{ route('categoria.categoriatodo', ['id' => $cat['id']]) }}">{{ $cat['nombre'] }}</a></li>
+                                <li><a class="dropdown-item" href="{{ route('categoria.categoriatodo', ['id' => $cat['id'], 'slug' => $cat['slug']]) }}">{{ $cat['nombre'] }}</a></li>
                             @endforeach
                         </ul>
                     </li>
@@ -59,7 +59,7 @@
                         </a>
                         <ul class="dropdown-menu">
                             @foreach ($marcas as $mar)
-                                <li><a class="dropdown-item" href="{{ route('marca.marcatodo', ['id' => $mar['id']]) }}">{{ $mar['nombre'] }}</a></li>
+                                <li><a class="dropdown-item" href="{{ route('marca.marcatodo', ['id' => $mar['id'], 'slug' => $mar['slug']]) }}">{{ $mar['nombre'] }}</a></li>
                             @endforeach
                         </ul>
                     </li>

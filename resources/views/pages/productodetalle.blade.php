@@ -43,11 +43,9 @@
                         <div class="col-md-6 p-4">
                             <h3 class="card-title">{{ $producto->nombre }}</h3>
                             <a class="nav-link text-primary"
-                                href="{{ route('categoria.categoriatodo', ['id' => $producto->categoria_id ?? '0']) }}">
-                                {{ $producto->categoria->nombre ?? '' }}
-                            </a>
+                    href="{{ route('marca.marcatodo', ['id' => $producto->marca_id ?? $producto['id'], 'slug' => $producto->marca->slug ?? Str::slug($producto->marca->nombre ?? 'sin-marca')]) }}">{{ $producto->marca->nombre ?? '' }}
                             <a class="nav-link text-primary"
-                            href="{{ route('marca.marcatodo', ['id' => $producto->marca_id ?? '0']) }}">{{ $producto->marca->nombre ?? '' }}</a>
+                            href="{{ route('categoria.categoriatodo', ['id' => $producto->categoria_id ?? $producto['id'], 'slug' => $producto->categoria->slug ?? Str::slug($producto->categoria->nombre ?? 'sin-categoria')]) }}">{{ $producto->categoria->nombre ?? '' }}</a>
                             <p class="price">${{ number_format($producto->precio) }}</p>
 
                             <div class="d-grid gap-2">
@@ -112,11 +110,11 @@
                     <div class="row justify-content-center">
                         @foreach ($chunk as $pro)
                             <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3 d-flex">
-                                <div class="mx-auto" style="width: 100%;">
+                                <div class="card product-card rounded-0 mx-auto" style="width: 100%;">
                                     <br>
                                     <div class="text-center">
                                         <a class="nav-link text-dark"
-                                            href="{{ route('producto.productodetalle', ['id' => $pro['id']]) }}">
+                                            href="{{ route('producto.productodetalle', ['id' => $pro['id'], 'slug' => $pro['slug']]) }}">
                                             <img src="{{ asset('archivos/folder_img_product/' . ($pro['img1'] ?? 'sinimagen.jpg')) }}"
                                                 class="card-img-top" alt="{{ $pro['nombre'] }}"
                                                 style="height: 200px; object-fit: cover;">
