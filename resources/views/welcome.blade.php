@@ -4,8 +4,7 @@
 
 @section('content')
     <br>
-    <br>
-    <h3 class="text-center">Productos Recientes</h3>
+       <h3 class="text-center">Productos Recientes</h3>
     <br>
     <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">

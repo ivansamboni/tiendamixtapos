@@ -13,7 +13,7 @@ class MarcaController extends Controller
      */
     public function index()
     {
-        $marca = Marca::orderBy("nombre", "asc")->paginate(5);
+        $marca = Marca::orderBy("nombre", "asc")->paginate(20);
         return response()->json($marca);
     }
     public function marcas()

@@ -43,42 +43,51 @@
                         <div class="col-md-6 p-4">
                             <h3 class="card-title">{{ $producto->nombre }}</h3>
                             <a class="nav-link text-primary"
-                    href="{{ route('marca.marcatodo', ['id' => $producto->marca_id ?? $producto['id'], 'slug' => $producto->marca->slug ?? Str::slug($producto->marca->nombre ?? 'sin-marca')]) }}">{{ $producto->marca->nombre ?? '' }}
-                            <a class="nav-link text-primary"
-                            href="{{ route('categoria.categoriatodo', ['id' => $producto->categoria_id ?? $producto['id'], 'slug' => $producto->categoria->slug ?? Str::slug($producto->categoria->nombre ?? 'sin-categoria')]) }}">{{ $producto->categoria->nombre ?? '' }}</a>
-                            <p class="price">${{ number_format($producto->precio) }}</p>
-
-                            <div class="d-grid gap-2">
-                                <button class="botonCompra">Comprar Ahora</button>
-                                <button class="btn btn-danger btn-outline">Agregar al Carrito</button>
+                                href="{{ route('marca.marcatodo', ['id' => $producto->marca_id ?? $producto['id'], 'slug' => $producto->marca->slug ?? Str::slug($producto->marca->nombre ?? 'sin-marca')]) }}"><i class="bi bi-tag-fill"></i> {{ $producto->marca->nombre ?? '' }}
+                                <a class="nav-link text-primary"
+                                    href="{{ route('categoria.categoriatodo', ['id' => $producto->categoria_id ?? $producto['id'], 'slug' => $producto->categoria->slug ?? Str::slug($producto->categoria->nombre ?? 'sin-categoria')]) }}"><i class="bi bi-tags-fill"></i> {{ $producto->categoria->nombre ?? '' }}</a>
                                 <br>
-                                <h6 class="card-title">Cantidad disponible {{ $producto->stock }}</h6>
-                                <p>en 3 cuotas de 
-                                    $
-                                    37.633
-                                     con 0% interés
+                                <div class="d-grid gap-2">                                   
                                     
-                                    Ver los medios de pago
-                                    Cupón10% OFF. Compra mínima $1.000.
-                                    Envío gratis a todo el país
-                                    
-                                    Conoce los tiempos y las formas de envío.
-                                    
-                                    Calcular cuándo llega</p>
-                            </div>
+                                    <h6 class="card-title">Cantidad disponible {{ $producto->stock }}</h6>
+                                    <p>en 3 cuotas de
+                                        $
+                                        37.633
+                                        con 0% interés
+
+                                        Ver los medios de pago
+                                        Cupón10% OFF. Compra mínima $1.000.
+                                        Envío gratis a todo el país
+
+                                        Conoce los tiempos y las formas de envío.
+
+                                        Calcular cuándo llega</p>
+                                </div>
+                                <br>
+                                <h4 class="price text-success">Precio ${{ number_format($producto->precio) }}</h4>
+                                <br>
+                                <div class="d-grid gap-2">
+                                    <button class="botonCompra"><i class="bi bi-credit-card"></i> Comprar Ahora</button>
+                                    <button class="btn btn-danger btn-outline"><i class="bi bi-cart-check"></i> Agregar al Carrito</button>
+                                    <br>
+                                                                       
+                                </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Descripción del producto -->
                 <br>
+
                 <div class="card rounded-0">
                     <div class="card-body">
-                        <h5 class="card-title navbar-brand">Descripción</h5>
-                        <p class="text-left">{!! nl2br(e($producto->descripcion)) !!}</p>
-                        <p class="card-text">
-                            <small class="text-muted">{{ $producto->created_at }}</small>
-                        </p>
+                        <div class="container">
+                            <h5 class="card-title navbar-brand">Descripción</h5>
+                            <p class="text-left">{!! nl2br(e($producto->descripcion)) !!}</p>
+                            <p class="card-text">
+                                <small class="text-muted">{{ $producto->created_at }}</small>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -86,21 +95,29 @@
     </div>
     <!-- modal imagen apliada -->
     <!-- Modal -->
-    <div class="modal fade" id="ampliarimagen" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+
+    <div class="modal fade" id="ampliarimagen" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg rounded-0">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <img id="modalImage" src="{{ asset('archivos/folder_img_product/' . $producto->img1) }}"
-                        alt="{{ $producto->nombre }}" style="height: 400px; object-fit: cover;"
-                        class="product-img rounded mb-3 text-center">
+
+                    <div class="d-flex justify-content-center align-items-center" style="height: 400px;">
+                        <img id="modalImage" src="{{ asset('archivos/folder_img_product/' . $producto->img1) }}"
+                            alt="{{ $producto->nombre }}" class="img-fluid" style="max-height: 100%; object-fit: contain;">
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>
+    </div>
+
+
+
 
     <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">

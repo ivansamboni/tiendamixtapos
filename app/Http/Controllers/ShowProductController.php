@@ -88,6 +88,29 @@ class ShowProductController extends Controller
         // Renderizar la vista con los datos
         return view('pages.productosmarcas', compact('productos', 'marca'));
     } 
+
+    public function searchNombreProducto(Request $request)
+    {
+        $nombre = trim($request->input('nombre'));  // Elimina espacios en los extremos
+        $palabras = explode(' ', $nombre);  // Divide en palabras individuales
+    
+        // Realiza la búsqueda con LIKE para cada palabra
+        $productosQuery = Producto::where(function ($query) use ($palabras) {
+            foreach ($palabras as $palabra) {
+                $query->where('nombre', 'LIKE', '%' . $palabra . '%')
+                ->orderBy('nombre', 'desc');
+            }
+        });
+        
+        // Cuenta los resultados antes de paginar
+        $totalresult = $productosQuery->count();
+        
+        // Luego aplicas la paginación
+        $productos = $productosQuery->paginate(20)->appends(request()->query());
+    
+        return view('pages.productoresult', compact('productos', 'totalresult'));
+    }
+    
 }
 
 

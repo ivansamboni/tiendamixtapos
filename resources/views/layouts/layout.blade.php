@@ -30,7 +30,7 @@
         <div class="container">
             <!-- Logo alineado a la izquierda -->
             <a class="navbar-brand" href="/">
-                <img src="" alt="Logo" width="200">
+                <img src="{{ asset('archivos/images/logo.png') }}" alt="Logo" width="200">
             </a>
     
             <!-- Botón de colapso para dispositivos pequeños -->
@@ -73,12 +73,12 @@
                 </ul>
     
                 <!-- Formulario de búsqueda -->
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2 search-input" type="search" placeholder="Buscar" aria-label="Search">
-                    <button class="btn btn-search " type="submit">
+                <form class="d-flex" role="search" action="{{ route('search.searchProducto') }}" method="GET">
+                    <input class="form-control me-2 search-input" type="search" name="nombre" placeholder="Buscar" value="{{ request('nombre') }}" aria-label="Search" required>
+                    <button class="btn btn-search" type="submit">
                         <i class="bi bi-search"></i>
                     </button>
-                </form>
+                </form>                
             </div>
         </div>
     </nav>

@@ -13,7 +13,7 @@ class CategoriaController extends Controller
      */
     public function index()
     {
-        $categoria = Categoria::orderBy("nombre", "asc")->paginate(5);
+        $categoria = Categoria::orderBy("nombre", "asc")->paginate(20);
         return response()->json($categoria);
     }
     public function categorias()
