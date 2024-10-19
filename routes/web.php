@@ -8,6 +8,7 @@ Route::get('/producto/{id}/{slug?}', [ShowProductController::class, 'productodet
 Route::get('/categoria/{id}/{slug?}', [ShowProductController::class, 'categoriatodo'])->name('categoria.categoriatodo');
 Route::get('/marca/{id}/{slug?}', [ShowProductController::class, 'marcatodo'])->name('marca.marcatodo');
 Route::get('/searchproducto', [ShowProductController::class, 'searchNombreProducto'])->name('search.searchProducto');
+Route::get('/ordershow', [OrderController::class, 'index'])->name('order.index');
 Route::get('/comprar/{id}/{slug?}', [OrderController::class, 'ordershow'])->name('order.show');
 Route::post('/comprar', [OrderController::class, 'store'])->name('order.store');
 

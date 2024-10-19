@@ -9,10 +9,11 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="mb-4">Procesar pago </h4>
-                    <form action="{{ route('order.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('order.store') }}" method="POST" enctype="multipart/form-data" id="paymentForm">
                         @csrf
-                        <input type="text" name="id" value="{{$producto->id}}" hidden>
-                        <input type="text" name="total" value="{{$producto->id}}" hidden>
+                        <!-- Ejemplo de productos -->
+                        <input type="text" hidden name="productos[0][id]" value="{{ $producto->id }}" id="productoid">
+                        <input type="text" hidden name="productos[0][cantidad]" value="1" id="productocantidad">
                         <div class="row g-3">
                             <!-- Nombres -->
                             <div class="col-md-6">
@@ -99,8 +100,8 @@
                             <!-- Dirección -->
                             <div class="col-md-6">
                                 <label for="direccion" class="form-label">Dirección</label>
-                                <input type="text" class="form-control form-control-sm" id="direccion" name="direccion"
-                                    required>
+                                <input type="text" class="form-control form-control-sm" id="direccion"
+                                    name="direccion" required>
                             </div>
 
                             <!-- Comprobante de Pago -->
@@ -131,18 +132,55 @@
                         <div class="col-6">
                             <h6>{{ $producto['nombre'] }}</h6>
                             <p class="card-text text-success">Precio: ${{ number_format($producto['precio']) }}</p>
+                            <p class="card-text text-dark">Disponibles {{ $producto['stock'] }}</p>
                         </div>
                     </div>
                     <div class="row mt-3">
                         <div class="col-6">
-                            <h4>Total</h4>
+                            <h3>Cantidad</h3>
                         </div>
                         <div class="col-6">
-                            <h4>${{ number_format($producto['precio']) }}</h4>
+                            <input type="number" class="form-control" id="agregarcantidad" value="1"
+                                min="1" max="{{ $producto['stock'] }}">
+                            <input type="number" hidden id="precio" id="precio"
+                                value="{{ $producto['precio'] }}">
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-6">
+                                <h3>Total</h3>
+                            </div>
+                            <div class="col-6">
+                                <h4 id="total" class="text-success">${{ $producto['precio'] }}</h4>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        const cantidad = document.getElementById('productocantidad');
+        const agregarcantidad = document.getElementById('agregarcantidad');
+        const precio = document.getElementById('precio');
+        const total = document.getElementById('total');
+
+        const valores = () => {
+            cantidad.value = agregarcantidad.value;
+            const cantidadNum = parseFloat(cantidad.value);
+            const precioNum = parseFloat(precio.value);
+
+            total.innerHTML = '$' + cantidadNum * precioNum;
+        };
+
+        agregarcantidad.addEventListener('input', valores);
+        window.onload = function() {
+            if (performance.navigation.type === 2) {
+                // Limpia el formulario si el usuario vuelve atrás
+                document.getElementById('paymentForm').reset();
+                agregarcantidad.value = 1
+            }
+        };
+    </script>
+
 @endsection
