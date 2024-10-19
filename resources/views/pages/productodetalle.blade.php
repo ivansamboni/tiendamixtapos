@@ -3,7 +3,7 @@
 @section('title', 'Página de Inicio')
 
 @section('content')
-    <div class="container my-5">
+    <div class="container my-4">
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card rounded-0">
@@ -67,7 +67,7 @@
                                 <h4 class="price text-success">Precio ${{ number_format($producto->precio) }}</h4>
                                 <br>
                                 <div class="d-grid gap-2">
-                                    <button class="botonCompra"><i class="bi bi-credit-card"></i> Comprar Ahora</button>
+                                    <a class="botonCompra text-center" href="{{ route('order.show', ['id' => $producto['id'], 'slug' => $producto['slug']]) }}"><i class="bi bi-credit-card"></i> Comprar Ahora</a>
                                     <button class="btn btn-danger btn-outline"><i class="bi bi-cart-check"></i> Agregar al Carrito</button>
                                     <br>
                                                                        

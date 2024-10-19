@@ -14,7 +14,9 @@
 
 body {
     font-family: 'Poppins', sans-serif;
-    background-color:#ededed;
+    background-color:#f0f0f0;
+    
+    
 }
 
 .navbar-brand {
@@ -189,6 +191,25 @@ body {
 .product-card:hover .product-image {
     transform: scale(1.1);  /* Zoom adicional en la imagen */
 }
-      
 
+.form-control:focus {
+    border-color: red !important; /* Cambia el borde a rojo */
+    box-shadow: 0 0 5px red; /* Efecto de sombra rojo */
+    outline: none; /* Elimina el borde predeterminado */
+}
+
+/* Modifica el select de la clase form-control */
+.form-control-select:focus {
+    background-color: red; /* Fondo rojo al hacer clic */
+    color: white; /* Texto blanco para contraste */
+    border-color: red;
+    box-shadow: 0 0 5px red;
+    outline: none;
+}
+
+/* Estilo para las opciones del select */
+.form-control-select option {
+    background-color: red;
+    color: white;
+}
       

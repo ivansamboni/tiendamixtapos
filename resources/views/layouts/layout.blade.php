@@ -81,10 +81,8 @@
                 </form>                
             </div>
         </div>
-    </nav>
-    
-
-
+    </nav>   
+    <br>
     <div class="container mt-4">
         @yield('content') <!-- Aquí se insertará el contenido de las vistas -->
     </div>
