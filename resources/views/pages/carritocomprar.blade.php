@@ -6,14 +6,13 @@
     <div class="row mt-2">
         <!-- Columna del formulario -->
         <div class="col-md-6">
-            <div class="card">
+            <div class="custom-card card">
                 <div class="card-body">
                     <h4 class="mb-4">Procesar pago </h4>
-                    <form action="{{ route('order.store') }}" method="POST" enctype="multipart/form-data" id="paymentForm">
+                    <form action="{{ route('order.store') }}" method="POST" onsubmit="vaciarcarro()"
+                        enctype="multipart/form-data" id="paymentForm">
                         @csrf
                         <!-- Ejemplo de productos -->
-                        <input type="text" hidden name="productos[0][id]" value="{{ $producto->id }}" id="productoid">
-                        <input type="text" hidden name="productos[0][cantidad]" value="1" id="productocantidad">
                         <div class="row g-3">
                             <!-- Nombres -->
                             <div class="col-md-6">
@@ -100,8 +99,8 @@
                             <!-- Dirección -->
                             <div class="col-md-6">
                                 <label for="direccion" class="form-label">Dirección</label>
-                                <input type="text" class="form-control form-control-sm" id="direccion"
-                                    name="direccion" required>
+                                <input type="text" class="form-control form-control-sm" id="direccion" name="direccion"
+                                    required>
                             </div>
 
                             <!-- Comprobante de Pago -->
@@ -112,81 +111,100 @@
                             </div>
                         </div>
                         <br>
-                        <!-- Botón Enviar -->
-                        <div class="mt-4">
-                            <button type="submit" class="botonCompra form-control">Procesar Pago</button>
+                        <div class="alert alert-danger" role="alert">
+                            <p> Consiganción Bancaria
+                                Consigna o transfiere el valor total de la orden a cualquiera de nuestras cuentas:
+
+                                BANCOLOMBIA
+                                Cuenta de ahorros: 69893423117
+                                Titular: Maria Cristina Florez Arcila
+
+
+                                Al confirmar el pago, procesaremos la orden y haremos el envío lo más rápido posible.</p>
                         </div>
-                    </form>
                 </div>
             </div>
         </div>
         <!-- Columna del producto -->
         <div class="col-md-6">
-            <div class="card">
+            <div class="custom-card card">
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-12 d-flex align-items-center gap-3">
-                            <img src="{{ asset('archivos/folder_img_product/' . ($producto['img1'] ?? 'sinimagen.jpg')) }}"
-                                alt="{{ $producto['nombre'] }}" style="height: 80px; object-fit: cover;">
-                            <a class="nav-link text-primary"
-                                href="{{ route('producto.productodetalle', ['id' => $producto['id'], 'slug' => $producto['slug']]) }}">
-                                <small>{{ $producto['nombre'] }}</small></a>
-
-                            <div class="col-4">
-                                <p> Disponibles {{ $producto['stock'] }}</p>
-                                <h5 class="card-text text-success">Precio ${{ number_format($producto['precio']) }}</h5>
-
-                            </div>
+                    @foreach ($productos as $index => $producto)
+                        <div class="row product-group align-items-center mb-3" id="product-{{ $index }}">
+                            <!-- Imagen del producto -->
                             <div class="col-2">
-                                <button class="btn btn-dark btn-sm">X</button>
+                                <img src="{{ asset('archivos/folder_img_product/' . ($producto['img1'] ?? 'sinimagen.jpg')) }}"
+                                    alt="Imagen de {{ $producto['nombre'] }}" class="img-fluid rounded"
+                                    style="height: 80px; object-fit: cover;">
                             </div>
-                        </div>
-                    </div>
-                    <div class="row mt-3">                       
-                        <div class="col-6">
-                            <label for="cantidad">Cantidad</label>
-                            <input type="number" class="form-control form-control-sm" name="cantidad" id="agregarcantidad"
-                                value="1" min="1" max="{{ $producto['stock'] }}">
-
-                            <input type="number" hidden id="precio" id="precio"
-                                value="{{ $producto['precio'] }}"><br>
-                        </div>
-
-                        <hr>
-                        <div class="row mt-2">
+        
+                            <!-- Nombre y precio del producto -->
                             <div class="col-6">
-                                <h3>Total</h3>
-                                <h4 id="total" class="text-success">${{ $producto['precio'] }}</h4>
+                                <small class="d-block">{{ $producto['nombre'] }}</small>
+                                <h5 class="card-text text-success">
+                                    ${{ number_format($producto['precio']) }}
+                                </h5>
+                            </div>
+        
+                            <!-- Cantidad del producto -->
+                            <div class="col-3">
+                                <small class="d-block">Disponibles {{ $producto['stock'] }}</small>
+                                <input type="hidden" name="productos[{{ $index }}][id]" value="{{ $producto['id'] }}">
+                                <input type="number" class="form-control form-control-sm" 
+                                    name="productos[{{ $index }}][cantidad]" 
+                                    value="1" min="1" max="{{ $producto['stock'] }}" 
+                                    onchange="updateTotal()">
+                                <input type="hidden" name="productos[{{ $index }}][precio]" value="{{ $producto['precio'] }}">
+                            </div>
+        
+                            <!-- Botón de eliminar -->
+                            <div class="col-1 d-flex justify-content-end">
+                                <button type="button" class="btn btn-danger btn-sm" 
+                                    onclick="removeProduct({{ $index }}, {{ $producto['id'] }})">X</button>
                             </div>
                         </div>
+                    @endforeach
+        
+                    <!-- Total y botón de compra -->
+                    <div class="text-center mt-4">
+                        <h3>Total</h3>
+                        <h4 id="total" class="text-success">$0</h4>
+                        <button type="submit" class="botonCompra form-control">Procesar Pago</button>
                     </div>
                 </div>
             </div>
         </div>
+        
     </div>
 
     <script>
-        const cantidad = document.getElementById('productocantidad');
-        const agregarcantidad = document.getElementById('agregarcantidad');
-        const precio = document.getElementById('precio');
-        const total = document.getElementById('total');
+        function vaciarcarro() {
+            localStorage.removeItem('carrito');
+        }
 
-        const valores = () => {
-            cantidad.value = agregarcantidad.value;
-            const cantidadNum = parseFloat(cantidad.value);
-            const precioNum = parseFloat(precio.value);
+        function removeProduct(index) {
 
-            total.innerHTML = '$' + cantidadNum * precioNum;
-        };
+            const productGroup = document.getElementById(`product-${index}`);
+            if (productGroup) {
+                productGroup.remove();
 
-        agregarcantidad.addEventListener('input', valores);
-        window.onload = function() {
-            if (performance.navigation.type === 2) {
-                // Limpia el formulario si el usuario vuelve atrás
-                document.getElementById('paymentForm').reset();
-                agregarcantidad.value = 1
             }
-        };
+            updateTotal();
+        }
+
+        function updateTotal() {
+            let total = 0;
+            const prices = document.querySelectorAll('input[name$="[precio]"]');
+            prices.forEach(priceInput => {
+                const cantidadInput = priceInput.closest('.row').querySelector('input[name$="[cantidad]"]');
+                const precio = parseFloat(priceInput.value);
+                const cantidad = parseInt(cantidadInput.value) || 0;
+                total += precio * cantidad;
+            });
+            document.getElementById('total').textContent = `$${total.toFixed(2)}`;
+        }
+
+        window.onload = updateTotal();
     </script>
 
 @endsection

@@ -12,4 +12,6 @@ Route::get('/ordershow', [OrderController::class, 'index'])->name('order.index')
 Route::get('/comprar/{id}/{slug?}', [OrderController::class, 'ordershow'])->name('order.show');
 Route::post('/comprar', [OrderController::class, 'store'])->name('order.store');
 
+Route::post('/carritocomprar', [OrderController::class, 'carritoshow'])->name('carrito.show');
+
 

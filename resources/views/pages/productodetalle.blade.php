@@ -6,7 +6,7 @@
     <div class="container my-4">
         <div class="row justify-content-center">
             <div class="col-md-12">
-                <div class="card rounded-0">
+                <div class="custom-card card">
                     <div class="row g-0">
                         <!-- Columna de imágenes del producto -->
                         <div class="col-md-6">
@@ -41,14 +41,16 @@
 
                         <!-- Columna de detalles del producto -->
                         <div class="col-md-6 p-4">
-                            <h3 class="card-title">{{ $producto->nombre }}</h3>
+                            <h3 class=" card-title">{{ $producto->nombre }}</h3>
                             <a class="nav-link text-primary"
-                                href="{{ route('marca.marcatodo', ['id' => $producto->marca_id ?? $producto['id'], 'slug' => $producto->marca->slug ?? Str::slug($producto->marca->nombre ?? 'sin-marca')]) }}"><i class="bi bi-tag-fill"></i> {{ $producto->marca->nombre ?? '' }}
+                                href="{{ route('marca.marcatodo', ['id' => $producto->marca_id ?? $producto['id'], 'slug' => $producto->marca->slug ?? Str::slug($producto->marca->nombre ?? 'sin-marca')]) }}"><i
+                                    class="bi bi-tag-fill"></i> {{ $producto->marca->nombre ?? '' }}
                                 <a class="nav-link text-primary"
-                                    href="{{ route('categoria.categoriatodo', ['id' => $producto->categoria_id ?? $producto['id'], 'slug' => $producto->categoria->slug ?? Str::slug($producto->categoria->nombre ?? 'sin-categoria')]) }}"><i class="bi bi-tags-fill"></i> {{ $producto->categoria->nombre ?? '' }}</a>
+                                    href="{{ route('categoria.categoriatodo', ['id' => $producto->categoria_id ?? $producto['id'], 'slug' => $producto->categoria->slug ?? Str::slug($producto->categoria->nombre ?? 'sin-categoria')]) }}"><i
+                                        class="bi bi-tags-fill"></i> {{ $producto->categoria->nombre ?? '' }}</a>
                                 <br>
-                                <div class="d-grid gap-2">                                   
-                                    
+                                <div class="d-grid gap-2">
+
                                     <h6 class="card-title">Cantidad disponible {{ $producto->stock }}</h6>
                                     <p>en 3 cuotas de
                                         $
@@ -67,10 +69,16 @@
                                 <h4 class="price text-success">Precio ${{ number_format($producto->precio) }}</h4>
                                 <br>
                                 <div class="d-grid gap-2">
-                                    <a class="botonCompra text-center" href="{{ route('order.show', ['id' => $producto['id'], 'slug' => $producto['slug']]) }}"><i class="bi bi-credit-card"></i> Comprar Ahora</a>
-                                    <button class="btn btn-danger btn-outline"><i class="bi bi-cart-check"></i> Agregar al Carrito</button>
+                                    <a class="botonCompra text-center"
+                                        href="{{ route('order.show', ['id' => $producto['id'], 'slug' => $producto['slug']]) }}"><i
+                                            class="bi bi-credit-card"></i> Comprar Ahora</a>
+                                    <button class="btn btn-danger btn-sm w-100" data-id="{{ $producto['id'] }}"
+                                        data-nombre="{{ $producto['nombre'] }}" data-precio="{{ $producto['precio'] }}"
+                                        data-img1="{{ asset('archivos/folder_img_product/' . ($producto['img1'] ?? 'sinimagen.jpg')) }}"
+                                        onclick="capturarDatos(this)">
+                                        <i class="bi bi-cart-check"></i> Agregar </button>
                                     <br>
-                                                                       
+
                                 </div>
                         </div>
                     </div>
@@ -79,7 +87,7 @@
                 <!-- Descripción del producto -->
                 <br>
 
-                <div class="card rounded-0">
+                <div class="custom-card card">
                     <div class="card-body">
                         <div class="container">
                             <h5 class="card-title navbar-brand">Descripción</h5>

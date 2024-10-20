@@ -10,15 +10,24 @@ class OrderController extends Controller
 {
     public function index()
     {
-
         return view('pages.productopagado');
-
     }
     public function ordershow($id)
     {
         $producto = Producto::find($id);
         return view('pages.productocomprar', compact('producto'));
 
+    }
+
+    public function carritoshow(Request $request)
+    {
+        
+        $request->validate([ 'productos' => 'required']);
+        foreach ($request->productos as $producto) {
+            $productos[] = Producto::find($producto['id']);
+        }
+
+        return view('pages.carritocomprar', compact('productos')); // Retornar la vista con el producto
     }
 
     public function store(Request $request)
@@ -63,8 +72,10 @@ class OrderController extends Controller
         foreach ($request->productos as $producto) {
             $productoDB = Producto::findOrFail($producto['id']);
             $precioUnitario = $productoDB->precio;
+            $stock = $productoDB->stock;
             $cantidad = $producto['cantidad'];
-
+            $stockActual = $stock - $cantidad;
+            $productoDB->update(['stock' => $stockActual]);
             // Guardar el detalle de la orden
             $orden_detalle = Order_detail::create([
                 'orden_id' => $orden->id,
