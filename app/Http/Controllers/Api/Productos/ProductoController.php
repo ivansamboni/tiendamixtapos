@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Producto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Laravel\Facades\Image;
+
 
 class ProductoController extends Controller
 {
@@ -39,26 +41,26 @@ class ProductoController extends Controller
             $file = $request->file('img1');
             $timestamp = now()->format('His');
             $file_name1 = $timestamp . $file->getClientOriginalName();
-            $file->move(public_path('archivos\folder_img_product'), $file_name1);
+            $file->move(public_path('archivos/folder_img_product'), $file_name1);
         }
         if ($request->hasFile('img2')) {
             $file = $request->file('img2');
             $timestamp = now()->format('His');
             $file_name2 = $timestamp . $file->getClientOriginalName();
-            $file->move(public_path('archivos\folder_img_product'), $file_name2);
+            $file->move(public_path('archivos/folder_img_product'), $file_name2);
         
         }
         if ($request->hasFile('img3')) {
             $file = $request->file('img3');
             $timestamp = now()->format('His');
             $file_name3 = $timestamp . $file->getClientOriginalName();
-            $file->move(public_path('archivos\folder_img_product'), $file_name3);
+            $file->move(public_path('archivos/folder_img_product'), $file_name3);
         }
         if ($request->hasFile('img4')) {
             $file = $request->file('img4');
             $timestamp = now()->format('His');
             $file_name4 = $timestamp . $file->getClientOriginalName();
-            $file->move(public_path('archivos\folder_img_product'), $file_name4);
+            $file->move(public_path('archivos/folder_img_product'), $file_name4);
         }
 
         $request->validate([

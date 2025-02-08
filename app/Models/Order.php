@@ -11,7 +11,7 @@ class Order extends Model
     protected $fillable = ['nombres', 'apellidos', 'cedula', 'email', 'telefono', 
     'departamento', 'ciudad','direccion', 'comprobante_pago','total','estado'];
 
-    public function details()
+    public function detalles()
     {
         return $this->hasMany(Order_detail::class);
     }

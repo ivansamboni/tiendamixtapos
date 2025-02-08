@@ -8,9 +8,18 @@ use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
-    public function index()
+    public function searchOrden()
     {
-        return view('pages.productopagado');
+        return view('pages.ordenes');
+    }
+    public function ordersearch(Request $request)
+    {
+        $orden = Order::with('detalles.producto')->find($request->id);
+        if (!$orden) {
+            return redirect()->route('pages.noresults');
+        }
+
+        return view('pages.productopagado', compact('orden'));
     }
     public function ordershow($id)
     {
@@ -21,8 +30,8 @@ class OrderController extends Controller
 
     public function carritoshow(Request $request)
     {
-        
-        $request->validate([ 'productos' => 'required']);
+
+        $request->validate(['productos' => 'required']);
         foreach ($request->productos as $producto) {
             $productos[] = Producto::find($producto['id']);
         }
@@ -78,7 +87,7 @@ class OrderController extends Controller
             $productoDB->update(['stock' => $stockActual]);
             // Guardar el detalle de la orden
             $orden_detalle = Order_detail::create([
-                'orden_id' => $orden->id,
+                'order_id' => $orden->id,
                 'producto_id' => $productoDB->id,
                 'cantidad' => $cantidad,
                 'precio_unitario' => $precioUnitario,
@@ -90,10 +99,7 @@ class OrderController extends Controller
         // Actualizar el total en la orden
         $orden->update(['total' => $total]);
 
-        $request->session()->flash('success', 'pago enviado con éxito');
-
-        return redirect()->route('order.index');
+        return redirect()->route('order.index')->with('orden', $orden->id);
 
     }
-
 }

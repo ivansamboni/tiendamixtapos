@@ -6,11 +6,12 @@
     <div class="row mt-2">
         <!-- Columna del formulario -->
         <div class="col-md-6">
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="mb-4">Procesar pago </h4>
-                    <form action="{{ route('order.store') }}" method="POST" enctype="multipart/form-data" id="paymentForm">
-                        @csrf
+            <form action="{{ route('order.store') }}" method="POST" enctype="multipart/form-data" id="paymentForm">
+                @csrf
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="mb-4">Procesar pago </h4>
+
                         <!-- Ejemplo de productos -->
                         <input type="text" hidden name="productos[0][id]" value="{{ $producto->id }}" id="productoid">
                         <input type="text" hidden name="productos[0][cantidad]" value="1" id="productocantidad">
@@ -113,12 +114,9 @@
                         </div>
                         <br>
                         <!-- Botón Enviar -->
-                        <div class="mt-4">
-                            <button type="submit" class="botonCompra form-control">Procesar Pago</button>
-                        </div>
-                    </form>
+
+                    </div>
                 </div>
-            </div>
         </div>
         <!-- Columna del producto -->
         <div class="col-md-6">
@@ -137,16 +135,13 @@
                                 <h5 class="card-text text-success">Precio ${{ number_format($producto['precio']) }}</h5>
 
                             </div>
-                            <div class="col-2">
-                                <button class="btn btn-dark btn-sm">X</button>
-                            </div>
                         </div>
                     </div>
-                    <div class="row mt-3">                       
+                    <div class="row mt-3">
                         <div class="col-6">
                             <label for="cantidad">Cantidad</label>
-                            <input type="number" class="form-control form-control-sm" name="cantidad" id="agregarcantidad"
-                                value="1" min="1" max="{{ $producto['stock'] }}">
+                            <input type="number" class="form-control form-control-sm" name="cantidad"
+                                id="agregarcantidad" value="1" min="1" max="{{ $producto['stock'] }}">
 
                             <input type="number" hidden id="precio" id="precio"
                                 value="{{ $producto['precio'] }}"><br>
@@ -158,11 +153,16 @@
                                 <h3>Total</h3>
                                 <h4 id="total" class="text-success">${{ $producto['precio'] }}</h4>
                             </div>
+                            <div class="mt-4">
+                                <button type="submit" class="botonCompra form-control">Procesar Pago</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        </form>
     </div>
 
     <script>
@@ -175,8 +175,8 @@
             cantidad.value = agregarcantidad.value;
             const cantidadNum = parseFloat(cantidad.value);
             const precioNum = parseFloat(precio.value);
-
-            total.innerHTML = '$' + cantidadNum * precioNum;
+            let Total = cantidadNum * precioNum;
+            document.getElementById('total').textContent = `$${parseFloat(Total).toLocaleString('es-ES')}`;
         };
 
         agregarcantidad.addEventListener('input', valores);

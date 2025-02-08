@@ -3,36 +3,49 @@
 @section('title', 'Página de Inicio')
 
 @section('content')
-
+<div id="carouselplublicidad" class="carousel slide carousel-fade" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#carouselplublicidad" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#carouselplublicidad" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#carouselplublicidad" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="https://tiendacereza.com/cdn/shop/files/19-11-Banner-Principal-Desktop-Navidad-Disfraces_1343x500_crop_center.png" class="d-block w-100" alt="">        
+      </div>
+      <div class="carousel-item active">
+        <img src="https://tiendacereza.com/cdn/shop/files/IMG_4428_1343x500_crop_center.png" class="d-block w-100" alt=""> 
+      </div>
+      <div class="carousel-item active">
+        <img src="https://tiendacereza.com/cdn/shop/files/IMG_4428_1343x500_crop_center.png" class="d-block w-100" alt=""> 
+      </div>           
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselplublicidad" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselplublicidad" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+  
+<br>
     <div id="productCarousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
         <div class="carousel-inner">
-            @foreach ($productos->chunk(3) as $chunk)
+            <h3 class="title text-center">NUEVOS PRODUCTOS</h3>
+            @foreach ($productos->chunk(5) as $chunk)
                 <!-- Divide los productos en grupos de 5 -->
                 <div class="carousel-item @if ($loop->first) active @endif">
                     <div class="row justify-content-center">
                         @foreach ($chunk as $pro)
-                            <div class="col-12 col-sm-6 col-md-4 mb-4 d-flex">
-                                <div class="custom-card product-card rounded-0 mx-auto" style="width: 100%;">
-                                    <br>
-                                    <div class="text-center">
-
-                                    </div>
-                                    <a class="nav-link text-dark"
-                                        href="{{ route('producto.productodetalle', ['id' => $pro['id'], 'slug' => $pro['slug']]) }}">
-                                        <div class="d-flex flex-column align-items-center">
-                                            <img src="{{ asset('archivos/folder_img_product/' . ($pro['img1'] ?? 'sinimagen.jpg')) }}"
-                                                alt="{{ $pro['nombre'] }}" style="height: 200px; object-fit;">
-                                            <div class="text-center">{{ $pro['nombre'] }}
-                                    </a>
-                                    <a class="nav-link text-primary"
-                                        href="{{ route('marca.marcatodo', ['id' => $pro->marca_id ?? $pro['id'], 'slug' => $pro->marca->slug ?? Str::slug($pro->marca->nombre ?? 'sin-marca')]) }}">{{ $pro->marca->nombre ?? '' }}</a>
-                                    <p class="card-text text-success">${{ number_format($pro['precio']) }}</p>
-                                </div>
-                            </div>
+                            <x-card-product :pro="$pro" />
+                        @endforeach
                     </div>
                 </div>
             @endforeach
         </div>
+        <!-- Controles del carrusel -->
         <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Previous</span>
@@ -42,52 +55,68 @@
             <span class="visually-hidden">Next</span>
         </button>
     </div>
-    @endforeach
-    </div>
-    </div>
-
-    <br>
-    <h3 class="text-center">Nuestros Productos</h3>
+    <!-- SECTION -->
     <br>
 
-    <div class="row justify-content-center">
-        @foreach ($productoall as $pro)
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4 d-flex">
-                <div class="custom-card product-card rounded-0 mx-auto" style="width: 100%;">
-                    <br>
-                    <div class="card-body flex-grow-1 d-flex flex-column align-items-center">
+    <div class="row">
+        <img src="https://tiendacereza.com/cdn/shop/files/Banner_LANZAMIENTO_BW_PC_1343x500_crop_center.png" alt="">
+    </div>
+    <br>
+    <div class="container">
+        @foreach ($categorias->slice(0, 6) as $index => $cat)
+            <h3 class="title"><i class="bi bi-tags"></i> {{ $cat->nombre }}</h3> <!-- Nombre de la categoría -->
+            <br><br>
+            <div id="productCarousel-{{ $index }}" class="carousel carousel-dark slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    @forelse ($cat->producto->chunk(5) as $chunk)
+                        <!-- Dividir productos en chunks de 5 -->
+                        <div class="carousel-item @if ($loop->first) active @endif">
+                            <div class="row justify-content-center">
+                                @foreach ($chunk as $pro)
+                                    <x-card-product :pro="$pro" />
+                                @endforeach
+                            </div>
+                        </div>
+                    @empty
+                        <div class="carousel-item active">
+                            <div class="row justify-content-center">
+                                <p>Próximamente.</p>
+                            </div>
+                        </div>
+                    @endforelse
+                </div> <!-- Cierre de .carousel-inner -->
 
-                        <a class="nav-link text-primary"
-                            href="{{ route('producto.productodetalle', ['id' => $pro['id'], 'slug' => $pro['slug']]) }}">
-                            <img src="{{ asset('archivos/folder_img_product/' . ($pro['img1'] ?? 'sinimagen.jpg')) }}"
-                                alt="{{ $pro['nombre'] }}" style="height: 100px; object-fit: cover;">
-                            <div class="text-center">{{ $pro['nombre'] }}
-                        </a>
-                        <a class="nav-link text-primary"
-                            href="{{ route('marca.marcatodo', ['id' => $pro->marca_id ?? $pro['id'], 'slug' => $pro->marca->slug ?? Str::slug($pro->marca->nombre ?? 'sin-marca')]) }}">{{ $pro->marca->nombre ?? '' }}</a>
-                        <p class="card-text">${{ number_format($pro['precio']) }}</p>
-
-                    </div>
-                    <div class="card-footer mt-auto p-0">
-                        <button class="btn btn-danger btn-sm w-100" data-id="{{ $pro['id'] }}"
-                            data-nombre="{{ $pro['nombre'] }}" data-precio="{{ $pro['precio'] }}"
-                            data-img1="{{ asset('archivos/folder_img_product/' . ($pro['img1'] ?? 'sinimagen.jpg')) }}"
-                            onclick="capturarDatos(this)">
-                            <i class="bi bi-cart-check"></i> Agregar </button>
-                    </div>
-                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel-{{ $index }}"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#productCarousel-{{ $index }}"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
             </div>
-
+            <br> <br>
+        @endforeach
     </div>
-    @endforeach
-    <br>
-    <br>
 
+
+    <div class="container">
+        <h3 class="title"><i class="bi bi-tags"></i> TODAS LAS CATEGORÍAS</h3><br>
+        <div class="row justify-content-center">
+            @foreach ($productoall as $pro)
+                <x-card-product :pro="$pro" />
+            @endforeach
+        </div>
+    </div>
+
+
+
+    <br><br><br>
     <div class="d-flex justify-content-center my-4">
+        
         {{ $productoall->links('vendor.pagination.custom') }}
     </div>
-
-
-
 
 @endsection

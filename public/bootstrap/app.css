@@ -9,14 +9,20 @@
 }
 
 .thumbnail:hover {
-    border-color: #f8826e;
+    border-color: #f55ced;
 }
 
 body {
     font-family: 'Poppins', sans-serif;
-    background-color:#f0f0f0;
+    background-color:#ffffff;
     
     
+}
+
+.custom-navbarTop {
+    background-color: #020202;  /* Fondo blanco */
+    padding: 10px 20px;
+    border-bottom: 1px solid #f0f0f0;
 }
 
 .navbar-brand {
@@ -49,7 +55,7 @@ body {
 }
 
 .nav-link:hover {
-    color: #e63946;  /* Rojo suave al pasar el cursor */
+    color: #da08ff;  /* Rojo suave al pasar el cursor */
 }
 
 .dropdown-menu {
@@ -63,7 +69,7 @@ body {
 }
 
 .dropdown-item:hover {
-    background-color: #e63946;
+    background-color: #da08ff;
 }
 
 /* Estilos del formulario de búsqueda */
@@ -76,11 +82,11 @@ body {
 
 .search-input:focus {
     box-shadow: 0 0 5px rgba(230, 57, 70, 0.5);
-    border-color: #e63946;
+    border-color: #08fff3;
 }
 
 .btn-search {
-    background-color: #e63946;
+    background-color: #da08ff;
     color: #fff;
     border-radius: 25px;
     padding: 8px 15px;
@@ -89,7 +95,7 @@ body {
 }
 
 .btn-search:hover {
-    background-color: #d62839;
+    background-color: #aa06c7;
 }
 
 /* Botón de colapso */
@@ -103,8 +109,8 @@ body {
 
 
 .botonCompra {
-	box-shadow: 0px 10px 14px -7px #fc5f5a;
-	background:linear-gradient(to bottom, #f14832 5%, #bb3026 100%);
+	box-shadow: 0px 10px 14px -7px #c123de;
+	background:linear-gradient(to bottom, #c123de 5%, #c123de 100%);
 	background-color:#77b55a;
 	border-radius:13px;
 	border:1px solid #4b8f29;
@@ -119,7 +125,7 @@ body {
 	text-shadow:0px 1px 0px #5b8a3c;
 }
 .botonCompra:hover {
-	background:linear-gradient(to bottom, #f80505 5%, #fd3535 100%);
+	background:linear-gradient(to bottom, #da08ff 5%, #da08ff 100%);
 	background-color:#72b352;
 }
 .botonCompra:active {
@@ -153,18 +159,18 @@ body {
 }
 
 .pagination .page-link {
-    color: #ff0000; /* Color del texto del enlace */
+    color: #c123de; /* Color del texto del enlace */
     transition: background-color 0.2s;
 }
 
 .pagination .page-link:hover {
-    background-color: #f36f6f;
+    background-color: #ff00b3;
     color: #fff;
 }
 
 .pagination .active .page-link {
-    background-color: #ff0000;
-    border-color: #ff0000;
+    background-color: #c123de;
+    border-color: #c123de;
     color: white;
 }
 
@@ -193,23 +199,23 @@ body {
 }
 
 .form-control:focus {
-    border-color: red !important; /* Cambia el borde a rojo */
-    box-shadow: 0 0 5px red; /* Efecto de sombra rojo */
+    border-color: #c123de !important; /* Cambia el borde a rojo */
+    box-shadow: 0 0 5px #c123de; /* Efecto de sombra rojo */
     outline: none; /* Elimina el borde predeterminado */
 }
 
 /* Modifica el select de la clase form-control */
 .form-control-select:focus {
-    background-color: red; /* Fondo rojo al hacer clic */
+    background-color: #c123de; /* Fondo rojo al hacer clic */
     color: white; /* Texto blanco para contraste */
-    border-color: red;
-    box-shadow: 0 0 5px red;
+    border-color: #c123de;
+    box-shadow: 0 0 5px #c123de;
     outline: none;
 }
 
 /* Estilo para las opciones del select */
 .form-control-select option {
-    background-color: red;
+    background-color: #c123de;
     color: white;
 }
 

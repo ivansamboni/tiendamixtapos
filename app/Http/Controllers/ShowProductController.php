@@ -14,7 +14,7 @@ class ShowProductController extends Controller
         $productos = Producto::with(['categoria', 'marca'])
             ->where('stock', '>', '0')
             ->orderBy('created_at', 'desc')
-            ->limit(12)
+            ->limit(10)
             ->get(); // Ejecuta la consulta
         $productoall = Producto::with(['categoria', 'marca'])
             ->where('stock', '>', '0')
@@ -95,16 +95,20 @@ class ShowProductController extends Controller
         $palabras = explode(' ', $nombre);  // Divide en palabras individuales
 
         // Verifica que haya al menos una palabra con más de 2 caracteres
-        $palabrasValidas = array_filter($palabras, fn($p) => strlen($p) >= 3);
+        $palabrasValidas = array_filter($palabras, fn($p) => strlen($p) >= 4);
 
         if (!empty($palabrasValidas)) {
             // Realiza la búsqueda con LIKE para cada palabra válida
             $productosQuery = Producto::where(function ($query) use ($palabrasValidas) {
                 foreach ($palabrasValidas as $palabra) {
-                    $query->orWhere('nombre', 'LIKE', '%' . $palabra . '%');
+                    $query->orWhere('nombre', 'LIKE', '%' . $palabra . '%')
+                          ->where('stock', '>', 0);
+                }
+            })->orWhereHas('categoria', function ($query) use ($palabrasValidas) {
+                foreach ($palabrasValidas as $palabra) {
+                    $query->where('nombre', 'LIKE', '%' . $palabra . '%');
                 }
             })->orderBy('nombre', 'desc');
-
             $totalresult = $productosQuery->count();
             $productos = $productosQuery->paginate(20)->appends(request()->query());
         } else {

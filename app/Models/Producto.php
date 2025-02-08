@@ -38,6 +38,10 @@ class Producto extends Model
         return $this->belongsTo(Proveedor::class);
     }
 
+    public function detallesOrden()
+    {
+        return $this->hasMany(Order_detail::class);
+    }
     protected static function booted()
     {
         static::creating(function ($producto) {

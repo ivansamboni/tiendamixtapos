@@ -117,7 +117,7 @@
 
                                 BANCOLOMBIA
                                 Cuenta de ahorros: 69893423117
-                                Titular: Maria Cristina Florez Arcila
+                                Titular: Ricardo Arcila
 
 
                                 Al confirmar el pago, procesaremos la orden y haremos el envío lo más rápido posible.</p>
@@ -137,7 +137,7 @@
                                     alt="Imagen de {{ $producto['nombre'] }}" class="img-fluid rounded"
                                     style="height: 80px; object-fit: cover;">
                             </div>
-        
+
                             <!-- Nombre y precio del producto -->
                             <div class="col-6">
                                 <small class="d-block">{{ $producto['nombre'] }}</small>
@@ -145,26 +145,30 @@
                                     ${{ number_format($producto['precio']) }}
                                 </h5>
                             </div>
-        
+
                             <!-- Cantidad del producto -->
                             <div class="col-3">
-                                <small class="d-block">Disponibles {{ $producto['stock'] }}</small>
-                                <input type="hidden" name="productos[{{ $index }}][id]" value="{{ $producto['id'] }}">
-                                <input type="number" class="form-control form-control-sm" 
-                                    name="productos[{{ $index }}][cantidad]" 
-                                    value="1" min="1" max="{{ $producto['stock'] }}" 
-                                    onchange="updateTotal()">
-                                <input type="hidden" name="productos[{{ $index }}][precio]" value="{{ $producto['precio'] }}">
+                                <small class="d-block">
+                                    Disponibles {!! $producto->stock > 0 ? $producto->stock : 
+                                    '<small class="text-danger">Se agotó</small>' !!}
+
+                                </small>
+                                <input type="hidden" name="productos[{{ $index }}][id]"
+                                    value="{{ $producto['id'] }}">
+                                <input type="number" class="form-control form-control-sm"
+                                    name="productos[{{ $index }}][cantidad]" value="1" min="1"
+                                    max="{{ $producto['stock'] }}" onchange="updateTotal()">
+                                <input type="hidden" name="productos[{{ $index }}][precio]"
+                                    value="{{ $producto['precio'] }}">
                             </div>
-        
+
                             <!-- Botón de eliminar -->
                             <div class="col-1 d-flex justify-content-end">
-                                <button type="button" class="btn btn-danger btn-sm" 
+                                <button type="button" class="btn btn-danger btn-sm"
                                     onclick="removeProduct({{ $index }}, {{ $producto['id'] }})">X</button>
                             </div>
                         </div>
                     @endforeach
-        
                     <!-- Total y botón de compra -->
                     <div class="text-center mt-4">
                         <h3>Total</h3>
@@ -174,37 +178,15 @@
                 </div>
             </div>
         </div>
-        
+
     </div>
 
     <script>
-        function vaciarcarro() {
-            localStorage.removeItem('carrito');
-        }
+      
 
-        function removeProduct(index) {
+        
 
-            const productGroup = document.getElementById(`product-${index}`);
-            if (productGroup) {
-                productGroup.remove();
-
-            }
-            updateTotal();
-        }
-
-        function updateTotal() {
-            let total = 0;
-            const prices = document.querySelectorAll('input[name$="[precio]"]');
-            prices.forEach(priceInput => {
-                const cantidadInput = priceInput.closest('.row').querySelector('input[name$="[cantidad]"]');
-                const precio = parseFloat(priceInput.value);
-                const cantidad = parseInt(cantidadInput.value) || 0;
-                total += precio * cantidad;
-            });
-            document.getElementById('total').textContent = `$${total.toFixed(2)}`;
-        }
-
-        window.onload = updateTotal();
+        //window.onload = updateTotal();
     </script>
 
 @endsection

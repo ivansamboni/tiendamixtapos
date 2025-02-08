@@ -3,116 +3,110 @@
 @section('title', 'Página de Inicio')
 
 @section('content')
-    <div class="container my-4">
-        <div class="row justify-content-center">
-            <div class="col-md-12">
-                <div class="custom-card card">
-                    <div class="row g-0">
-                        <!-- Columna de imágenes del producto -->
-                        <div class="col-md-6">
-                            <div class="container my-4">
-                                <div class="row">
-                                    <!-- Thumbnails (de arriba hacia abajo) -->
-                                    <div class="col-md-12 ">
-                                        <img src="{{ $producto->img1 ? asset('archivos/folder_img_product/' . $producto->img1) : asset('archivos/folder_img_product/sinimagen.jpg') }}"
-                                            alt="" style="height: 80px; object-fit: cover;"
-                                            onmouseover="changeImage(this.src)" class="thumbnail rounded">
-                                        <img src="{{ $producto->img2 ? asset('archivos/folder_img_product/' . $producto->img2) : asset('archivos/folder_img_product/sinimagen.jpg') }}"
-                                            alt="" style="height: 80px; object-fit: cover;"
-                                            onmouseover="changeImage(this.src)" class="thumbnail rounded">
-                                        <img src="{{ $producto->img3 ? asset('archivos/folder_img_product/' . $producto->img3) : asset('archivos/folder_img_product/sinimagen.jpg') }}"
-                                            alt="" style="height: 80px; object-fit: cover;"
-                                            onmouseover="changeImage(this.src)" class="thumbnail rounded">
-                                        <img src="{{ $producto->img4 ? asset('archivos/folder_img_product/' . $producto->img4) : asset('archivos/folder_img_product/sinimagen.jpg') }}"
-                                            alt="" style="height: 80px; object-fit: cover;"
-                                            onmouseover="changeImage(this.src)" class="thumbnail rounded">
-                                    </div>
-                                    <div class="col-md-12 text-center">
-                                        <!-- Imagen principal -->
-                                        <img id="mainImage"
-                                            src="{{ asset('archivos/folder_img_product/' . $producto->img1) }}"
-                                            alt="{{ $producto->nombre }}" style="height: 300px; object-fit: cover;"
-                                            class="product-img rounded mb-3 thumbnail" data-bs-toggle="modal"
-                                            data-bs-target="#ampliarimagen" onclick="ampliarImage(this.src)">
-                                    </div>
-                                </div>
+
+    <div class="section">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+
+
+                <!-- Product thumb imgs -->
+
+                <div class="col-md-6">
+                    <div class="container my-4">
+                        <div class="row">
+                            <!-- Thumbnails (de arriba hacia abajo) -->
+                            <div class="col-md-12 ">
+                                <img src="{{ $producto->img1 ? asset('archivos/folder_img_product/' . $producto->img1) : asset('archivos/folder_img_product/sinimagen.jpg') }}"
+                                    alt="" style="height: 80px; object-fit: cover;"
+                                    onmouseover="changeImage(this.src)" class="thumbnail rounded">
+                                <img src="{{ $producto->img2 ? asset('archivos/folder_img_product/' . $producto->img2) : asset('archivos/folder_img_product/sinimagen.jpg') }}"
+                                    alt="" style="height: 80px; object-fit: cover;"
+                                    onmouseover="changeImage(this.src)" class="thumbnail rounded">
+                                <img src="{{ $producto->img3 ? asset('archivos/folder_img_product/' . $producto->img3) : asset('archivos/folder_img_product/sinimagen.jpg') }}"
+                                    alt="" style="height: 80px; object-fit: cover;"
+                                    onmouseover="changeImage(this.src)" class="thumbnail rounded">
+                                <img src="{{ $producto->img4 ? asset('archivos/folder_img_product/' . $producto->img4) : asset('archivos/folder_img_product/sinimagen.jpg') }}"
+                                    alt="" style="height: 80px; object-fit: cover;"
+                                    onmouseover="changeImage(this.src)" class="thumbnail rounded">
+                            </div>
+                            <div class="col-md-12 text-center">
+                                <!-- Imagen principal -->
+                                <img id="mainImage" src="{{ asset('archivos/folder_img_product/' . $producto->img1) }}"
+                                    alt="{{ $producto->nombre }}" style="height: 300px; object-fit: cover;"
+                                    class="product-img rounded mb-3 thumbnail" data-bs-toggle="modal"
+                                    data-bs-target="#ampliarimagen" onclick="ampliarImage(this.src)">
                             </div>
                         </div>
-
-                        <!-- Columna de detalles del producto -->
-                        <div class="col-md-6 p-4">
-                            <h3 class=" card-title">{{ $producto->nombre }}</h3>
-                            <a class="nav-link text-primary"
-                                href="{{ route('marca.marcatodo', ['id' => $producto->marca_id ?? $producto['id'], 'slug' => $producto->marca->slug ?? Str::slug($producto->marca->nombre ?? 'sin-marca')]) }}"><i
-                                    class="bi bi-tag-fill"></i> {{ $producto->marca->nombre ?? '' }}
-                                <a class="nav-link text-primary"
-                                    href="{{ route('categoria.categoriatodo', ['id' => $producto->categoria_id ?? $producto['id'], 'slug' => $producto->categoria->slug ?? Str::slug($producto->categoria->nombre ?? 'sin-categoria')]) }}"><i
-                                        class="bi bi-tags-fill"></i> {{ $producto->categoria->nombre ?? '' }}</a>
-                                <br>
-                                <div class="d-grid gap-2">
-
-                                    <h6 class="card-title">Cantidad disponible {{ $producto->stock }}</h6>
-                                    <p>en 3 cuotas de
-                                        $
-                                        37.633
-                                        con 0% interés
-
-                                        Ver los medios de pago
-                                        Cupón10% OFF. Compra mínima $1.000.
-                                        Envío gratis a todo el país
-
-                                        Conoce los tiempos y las formas de envío.
-
-                                        Calcular cuándo llega</p>
-                                </div>
-                                <br>
-                                <h4 class="price text-success">Precio ${{ number_format($producto->precio) }}</h4>
-                                <br>
-                                <div class="d-grid gap-2">
-                                    <a class="botonCompra text-center"
-                                        href="{{ route('order.show', ['id' => $producto['id'], 'slug' => $producto['slug']]) }}"><i
-                                            class="bi bi-credit-card"></i> Comprar Ahora</a>
-                                    <button class="btn btn-danger btn-sm w-100" data-id="{{ $producto['id'] }}"
-                                        data-nombre="{{ $producto['nombre'] }}" data-precio="{{ $producto['precio'] }}"
-                                        data-img1="{{ asset('archivos/folder_img_product/' . ($producto['img1'] ?? 'sinimagen.jpg')) }}"
-                                        onclick="capturarDatos(this)">
-                                        <i class="bi bi-cart-check"></i> Agregar </button>
-                                    <br>
-
-                                </div>
-                        </div>
                     </div>
                 </div>
 
-                <!-- Descripción del producto -->
-                <br>
 
-                <div class="custom-card card">
-                    <div class="card-body">
-                        <div class="container">
-                            <h5 class="card-title navbar-brand">Descripción</h5>
-                            <p class="text-left">{!! nl2br(e($producto->descripcion)) !!}</p>
-                            <p class="card-text">
-                                <small class="text-muted">{{ $producto->created_at }}</small>
-                            </p>
+                <!-- /Product thumb imgs -->
+
+                <!-- Product details -->
+                <div class="col-md-5">
+                    <div class="product-details">
+                        <h2 class="product-name">{{ $producto->nombre }}</h2>
+                        <div>
+                            <h3 class="product-price">${{ number_format($producto->precio) }}</h3>
+                            <h6>Disponibles <span class="product-available">{{ $producto->stock }}</span></h6>
                         </div>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+                            labore
+                            et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
+                            ut
+                            aliquip ex ea commodo consequat.</p>
+                        <div class="d-grid gap-2">
+                            <a class="btn botonCompra text-center"
+                                href="{{ route('order.show', ['id' => $producto['id'], 'slug' => $producto['slug']]) }}"><i
+                                    class="bi bi-credit-card"></i> Comprar Ahora</a>
+                            <button class="btn btn-danger btn-sm w-100" data-id="{{ $producto['id'] }}"
+                                data-nombre="{{ $producto['nombre'] }}" data-precio="{{ $producto['precio'] }}"
+                                data-img1="{{ asset('archivos/folder_img_product/' . ($producto['img1'] ?? 'sinimagen.jpg')) }}"
+                                onclick="capturarDatos(this)">
+                                <i class="bi bi-cart-check"></i> Agregar </button>
+                            <br>
+                        </div>
+
+
+
                     </div>
                 </div>
+                <!-- /Product details -->
+
+                <!-- Product tab -->
+                <div class="col-md-12">
+                    <div id="product-tab">
+                        <!-- product tab nav -->
+                        <ul class="tab-nav">
+                            <li class="active"><a data-toggle="tab" href="#tab1">Descripción</a></li>
+
+                        </ul>
+                        <!-- /product tab nav -->
+                        <p class="text-left">{!! nl2br(e($producto->descripcion)) !!}</p>
+                        <!-- product tab content -->
+
+
+                        <!-- /product tab content  -->
+                    </div>
+                </div>
+                <!-- /product tab -->
             </div>
+            <!-- /row -->
         </div>
+        <!-- /container -->
     </div>
-    <!-- modal imagen apliada -->
     <!-- Modal -->
 
     <div class="modal fade" id="ampliarimagen" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg rounded-0">
             <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
                 <div class="modal-body">
-
+                    <button type="button" class="btn-close justify-content-end" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                     <div class="d-flex justify-content-center align-items-center" style="height: 400px;">
                         <img id="modalImage" src="{{ asset('archivos/folder_img_product/' . $producto->img1) }}"
                             alt="{{ $producto->nombre }}" class="img-fluid" style="max-height: 100%; object-fit: contain;">
@@ -122,35 +116,15 @@
             </div>
         </div>
     </div>
-    </div>
-
-
-
-
-    <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+    <br>
+    <div id="productCarousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
         <div class="carousel-inner">
             @foreach ($productos->chunk(5) as $chunk)
                 <!-- Divide los productos en grupos de 5 -->
                 <div class="carousel-item @if ($loop->first) active @endif">
                     <div class="row justify-content-center">
                         @foreach ($chunk as $pro)
-                            <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3 d-flex">
-                                <div class="card product-card rounded-0 mx-auto" style="width: 100%;">
-                                    <br>
-                                    <div class="text-center">
-                                        <a class="nav-link text-dark"
-                                            href="{{ route('producto.productodetalle', ['id' => $pro['id'], 'slug' => $pro['slug']]) }}">
-                                            <img src="{{ asset('archivos/folder_img_product/' . ($pro['img1'] ?? 'sinimagen.jpg')) }}"
-                                                class="card-img-top" alt="{{ $pro['nombre'] }}"
-                                                style="height: 200px; object-fit: cover;">
-
-                                            {{ $pro['nombre'] }}
-                                        </a>
-
-                                        <p class="card-text">${{ number_format($pro['precio'], 2) }}</p>
-                                    </div>
-                                </div>
-                            </div>
+                            <x-card-product :pro="$pro" />
                         @endforeach
                     </div>
                 </div>
@@ -158,18 +132,14 @@
         </div>
 
         <!-- Controles del carrusel -->
-        <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+        <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Next</span>
-        </button>
+          </button>
     </div>
-    <script>
-        function changeImage(src) {
-            document.getElementById('mainImage').src = src;
-        }
 
-        function ampliarImage(src) {
-            document.getElementById('modalImage').src = src;
-        }
-    </script>
 @endsection
