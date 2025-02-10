@@ -20,7 +20,7 @@ return new class extends Migration {
             $table->string('departamento', 100);
             $table->string('ciudad', 100);
             $table->string('direccion', 100);
-            $table->string('comprobante_pago', 100);
+            $table->string('comprobante_pago', 100)->nullable();
             $table->decimal('total', 10);  // Total de la orden
             $table->string('estado', 20)->default('pendiente');  // Ej: pendiente, pagado, cancelado
             $table->timestamps();

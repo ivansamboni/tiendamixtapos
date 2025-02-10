@@ -5,6 +5,10 @@ use App\Models\Producto;
 use App\Models\Order;
 use App\Models\Order_detail;
 use Illuminate\Http\Request;
+use MercadoPago\MercadoPagoConfig;
+use MercadoPago\Client\Preference\PreferenceClient;
+use MercadoPago\Exceptions\MPApiException;
+use Exception;
 
 class OrderController extends Controller
 {
@@ -24,20 +28,75 @@ class OrderController extends Controller
     public function ordershow($id)
     {
         $producto = Producto::find($id);
-        return view('pages.productocomprar', compact('producto'));
+        $mpAccessToken = 'APP_USR-983284505153130-020915-df4da19ac41c3a0d983f957debb06301-2259623990';
+        if (!$mpAccessToken) {
+            throw new Exception("El token de acceso de Mercado Pago no está configurado.");
+        }
+        MercadoPagoConfig::setAccessToken($mpAccessToken);
+        MercadoPagoConfig::setRuntimeEnviroment(MercadoPagoConfig::LOCAL);
+        $client = new PreferenceClient();
+        $preference = $client->create([
+
+            "items" => [
+                [
+                    "id" => (string) $producto->id, // Convertimos el ID a string
+                    "title" => trim($producto->nombre), // Eliminamos espacios extra                    
+                    "quantity" => 1,
+                    "unit_price" => (float) $producto->precio // Nos aseguramos de que sea fl
+                ],                
+            ],
+            "statement_descriptor" => "TIENDA ONLINE",
+            "external_reference" => "1234567890",
+        ]);
+
+
+        return view('pages.productocomprar', compact('producto', 'preference'));
 
     }
 
     public function carritoshow(Request $request)
-    {
-
-        $request->validate(['productos' => 'required']);
-        foreach ($request->productos as $producto) {
-            $productos[] = Producto::find($producto['id']);
-        }
-
-        return view('pages.carritocomprar', compact('productos')); // Retornar la vista con el producto
+{
+    // Configura el token de acceso de Mercado Pago
+    $mpAccessToken = 'APP_USR-983284505153130-020915-df4da19ac41c3a0d983f957debb06301-2259623990';
+    if (!$mpAccessToken) {
+        throw new Exception("El token de acceso de Mercado Pago no está configurado.");
     }
+
+    // Configura el SDK de Mercado Pago
+    MercadoPagoConfig::setAccessToken($mpAccessToken);
+    MercadoPagoConfig::setRuntimeEnviroment(MercadoPagoConfig::LOCAL);
+
+    // Valida que se hayan enviado productos
+    $request->validate(['productos' => 'required']);
+
+    // Obtén los productos desde la base de datos
+    $productos = [];
+    foreach ($request->productos as $producto) {
+        $productos[] = Producto::find($producto['id']);
+    }
+
+    // Construye el array de items para Mercado Pago
+    $items = [];
+    foreach ($productos as $producto) {
+        $items[] = [
+            "id" => (string) $producto->id, // Convertimos el ID a string
+            "title" => trim($producto->nombre), // Eliminamos espacios extra
+            "quantity" => 2,
+            "unit_price" => (float) $producto->precio // Nos aseguramos de que sea float
+        ];
+    }
+
+    // Crea la preferencia de pago
+    $client = new PreferenceClient();
+    $preference = $client->create([
+        "items" => $items, // Pasamos el array de items construido
+        "statement_descriptor" => "TIENDA ONLINE",
+        "external_reference" => "1234567890",
+    ]);
+
+    // Retorna la vista con los productos y la preferencia
+    return view('pages.carritocomprar', compact('productos', 'preference'));
+}
 
     public function store(Request $request)
     {
@@ -51,7 +110,7 @@ class OrderController extends Controller
             'departamento' => 'required',
             'ciudad' => 'required',
             'direccion' => 'required',
-            'comprobante_pago' => 'required|file',
+            
         ]);
 
         // Procesar el comprobante de pago
@@ -102,4 +161,6 @@ class OrderController extends Controller
         return redirect()->route('order.index')->with('orden', $orden->id);
 
     }
+
+
 }

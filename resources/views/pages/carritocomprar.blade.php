@@ -3,13 +3,14 @@
 @section('title', 'Página de Inicio')
 
 @section('content')
+<script src="https://sdk.mercadopago.com/js/v2"></script>
     <div class="row mt-2">
         <!-- Columna del formulario -->
         <div class="col-md-6">
             <div class="custom-card card">
                 <div class="card-body">
                     <h4 class="mb-4">Procesar pago </h4>
-                    <form action="{{ route('order.store') }}" method="POST" onsubmit="vaciarcarro()"
+                    <form action="{{ route('create.preference') }}" method="POST" onsubmit="vaciarcarro()"
                         enctype="multipart/form-data" id="paymentForm">
                         @csrf
                         <!-- Ejemplo de productos -->
@@ -107,7 +108,7 @@
                             <div class="col-md-12">
                                 <label for="comprobante" class="form-label">Comprobante de Pago</label>
                                 <input type="file" class="form-control form-control-sm" id="comprobante"
-                                    name="comprobante_pago" required>
+                                    name="comprobante_pago" >
                             </div>
                         </div>
                         <br>
@@ -173,20 +174,13 @@
                     <div class="text-center mt-4">
                         <h3>Total</h3>
                         <h4 id="total" class="text-success">$0</h4>
-                        <button type="submit" class="botonCompra form-control">Procesar Pago</button>
+                        <button type="submit" class="form-control">Pagar con Mercado Pago</button>
+                        
                     </div>
                 </div>
             </div>
         </div>
 
-    </div>
-
-    <script>
-      
-
-        
-
-        //window.onload = updateTotal();
-    </script>
+    </div>   
 
 @endsection
