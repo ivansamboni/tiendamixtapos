@@ -21,6 +21,4 @@ Route::post('/carritocomprar', [OrderController::class, 'carritoshow'])->name('c
 
 
 Route::post('/create-preference', [MercadoPagoController::class, 'createPaymentPreference'])->name('create.preference');
-Route::get('/mercadopago/success', [MercadoPagoController::class, 'success'])->name('mercadopago.success');
-Route::get('/mercadopago/failed', [MercadoPagoController::class, 'failed'])->name('mercadopago.failed');
-
+Route::get('/checkoutorder', [MercadoPagoController::class, 'index'])->name('checkout.order');

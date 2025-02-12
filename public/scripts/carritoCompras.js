@@ -1,10 +1,14 @@
-
 window.onload = function () {
     loadDataStorage();
     updateTotal();
 };
-function loadDataStorage() {
 
+
+
+//carga los datos del navegador del local storage
+
+function loadDataStorage() {
+    const spamcantidad = document.getElementById('spamcantidad');
     const carrito = JSON.parse(localStorage.getItem('carrito'));
 
     const formulario = document.getElementById('carritoForm');
@@ -57,25 +61,27 @@ function loadDataStorage() {
     });
 
     // Mostrar la cantidad de productos seleccionados
-    const spamcantidad = document.getElementById('spamcantidad');
+   
     spamcantidad.innerHTML = carrito.length;
 
 }
 
-
+//elimina los items del carrito de compras de la pagina
 function removeItem(idp) {
     // Eliminar el producto del DOM
+
     const productCar = document.getElementById(`productcar-${idp}`);  
     // Verificar y eliminar cada elemento por separado
     if (productCar) productCar.remove();
-
+  
     // Eliminar el producto del localStorage
     let productos = JSON.parse(localStorage.getItem('carrito')) || [];
     productos = productos.filter(producto => producto.id !== idp.toString()); // Filtrar el producto por ID
     localStorage.setItem('carrito', JSON.stringify(productos)); // Guardar el carrito actualizado
-       
+    spamcantidad.innerHTML = productos.length;   
 }
 
+//elimina los items del carrito de compras
 function removeProduct(productId,idp) {
     // Eliminar el producto del DOM
     const productGroup = document.getElementById(`product-${productId}`);
@@ -91,14 +97,15 @@ function removeProduct(productId,idp) {
     localStorage.setItem('carrito', JSON.stringify(productos)); // Guardar el carrito actualizado
 
     // Actualizar la cantidad en el contador
-    const spamcantidad = document.getElementById('spamcantidad');
-    spamcantidad.innerHTML = productos.length;    
+   
+    spamcantidad.innerHTML = --productos.length;    
     // Actualizar el total
     updateTotal();
 }
 
+// agrega productos al carrito
 function capturarDatos(button) {
-    const spamcantidad = document.getElementById('spamcantidad');
+
     const id = button.getAttribute('data-id');
     const nombre = button.getAttribute('data-nombre');
     const precio = button.getAttribute('data-precio');
@@ -167,8 +174,6 @@ function capturarDatos(button) {
         // Agregar los elementos al formulario
         formulario.appendChild(input);
         formulario.appendChild(contenedor);
-    } else {
-        alert('ya está en el carrito abre el carrito de compras para que aumentes la cantidad.');
     }
     updateTotal();
 }
@@ -186,6 +191,7 @@ function updateTotal() {
     document.getElementById('total').textContent = `$${parseFloat(total).toLocaleString('es-ES')}`;
 }
 
+//elimina todos los productos del carrito
 function vaciarcarro() {
     localStorage.removeItem('carrito');
     location.reload()

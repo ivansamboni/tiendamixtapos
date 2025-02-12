@@ -16,6 +16,13 @@ use Exception;
 class MercadoPagoController extends Controller
 {
 
+    public function index()
+    {
+
+        return view('pages.checkout');
+
+    }
+
     public function createPaymentPreference(Request $request)
     {
         $mpAccessToken = 'APP_USR-983284505153130-020915-df4da19ac41c3a0d983f957debb06301-2259623990';
@@ -43,7 +50,7 @@ class MercadoPagoController extends Controller
         // Procesar el comprobante de pago
         if ($request->hasFile('comprobante_pago')) {
             $comprobante_pago = $request->file('comprobante_pago');
-            $timestamp = now()->format('His');           
+            $timestamp = now()->format('His');
             $file_name = $request->cedula . $timestamp . $comprobante_pago->getClientOriginalName();
             $comprobante_pago->move(public_path('archivos/comprobantes_pagos'), $file_name);
         }
@@ -70,7 +77,7 @@ class MercadoPagoController extends Controller
             $items[] = [
                 "id" => (string) $productoDB->id, // Convertimos el ID a string
                 "title" => trim($productoDB->nombre), // Eliminamos espacios extra
-                "quantity" => (float)  $producto['cantidad'],
+                "quantity" => (float) $producto['cantidad'],
                 "unit_price" => (float) $productoDB->precio // Nos aseguramos de que sea float
             ];
             $precioUnitario = $productoDB->precio;
@@ -90,16 +97,45 @@ class MercadoPagoController extends Controller
             $total += $precioUnitario * $cantidad;
         }
         // Actualizar el total en la orden
-        $orden->update(['total' => $total]);       
+        $orden->update(['total' => $total]);
 
         $client = new PreferenceClient();
         $preference = $client->create([
             "items" => $items, // Pasamos el array de items construido
+            "payer" => [
+                "name" => $request->nombres,
+                "surname" => $request->apellidos,
+                "email" => $request->email,
+                "phone" => [
+                    "area_code" => "57",
+                    "number" => $request->telefono,
+                ],
+                "identification" => [
+                    "type" => "CC",
+                    "number" => $request->cedula,
+                ],
+                "address" => [
+
+                    "street_number" => $request->direccion,
+                ]
+
+            ],
             "statement_descriptor" => "TIENDA ONLINE",
             "external_reference" => "1234567890",
+
         ]);
 
-        return view('pages.checkout', compact('preference'));
+        $requestData = $request->all();
+        $orderId = $orden->id;
+
+        session()->put('preference', $preference->id);
+        session()->put('requestData', $requestData);
+        session()->put('total', $total);
+        session()->put('orderId', $orderId);
+
+        return redirect()->route('checkout.order');
+        
+        //return view('pages.checkout', compact('preference','requestData','total','orderId'));
     }
 
 }

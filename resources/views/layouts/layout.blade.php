@@ -52,11 +52,6 @@
                 </a>
             </div>
 
-            <!-- Navbar Toggler -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
-                aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
 
             <!-- Centered Search Form -->
             <div class="collapse navbar-collapse justify-content-center" id="navbarContent">
@@ -67,17 +62,7 @@
                 </form>
             </div>           
             <!-- Right Aligned Links -->
-            <ul class="navbar-nav ms-auto">
-                <div class="header-ctn">
-                    <!-- Cart -->
-                    <div class="dropdown">
-                        <a class="dropdown-toggle" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                            aria-controls="offcanvasRight">
-                            <h3 class="text-light" style="cursor: pointer;"><i class="bi bi-person"></i>
-                            </h3>                           
-                        </a>
-                    </div>
-                </div>
+            <ul class="navbar-nav ms-auto">                
                 <div class="header-ctn">
                     <!-- Cart -->
                     <div class="dropdown">
@@ -149,7 +134,7 @@
                         @csrf
                         <br>
 
-                        <button type="submit" class="btn btn-dark btn-sm w-100" @disabled(Route::is('carrito.show'))>
+                        <button type="submit" class="myCar btn-sm w-100" @disabled(Route::is('carrito.show'))>
                             <i class="bi bi-cart-check"></i> Ir al carrito
                         </button>
                         <br><br>

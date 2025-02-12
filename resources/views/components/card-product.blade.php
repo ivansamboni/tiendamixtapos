@@ -11,7 +11,7 @@
             <div class="product-body">
                 <h3 class="product-name">
                     <a href="{{ route('producto.productodetalle', ['id' => $pro['id'], 'slug' => $pro['slug']]) }}">
-                        {{ $pro['nombre'] }}
+                        {{ Str::limit($pro['nombre'], 40, '...') }}
                     </a>
                 </h3>
                 <h4 class="product-price">${{ number_format($pro['precio']) }}</h4>

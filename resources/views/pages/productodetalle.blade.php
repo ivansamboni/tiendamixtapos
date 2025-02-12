@@ -58,14 +58,11 @@
                             et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
                             ut
                             aliquip ex ea commodo consequat.</p>
-                        <div class="d-grid gap-2">
-                            <a class="btn botonCompra text-center"
-                                href="{{ route('order.show', ['id' => $producto['id'], 'slug' => $producto['slug']]) }}"><i
-                                    class="bi bi-credit-card"></i> Comprar Ahora</a>
-                            <button class="btn btn-danger btn-sm w-100" data-id="{{ $producto['id'] }}"
+                        <div class="d-grid gap-2">                        
+                            <button class="tn botonCompra text-center" data-id="{{ $producto['id'] }}"
                                 data-nombre="{{ $producto['nombre'] }}" data-precio="{{ $producto['precio'] }}"
                                 data-img1="{{ asset('archivos/folder_img_product/' . ($producto['img1'] ?? 'sinimagen.jpg')) }}"
-                                onclick="capturarDatos(this)">
+                                onclick="capturarDatos(this)" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                                 <i class="bi bi-cart-check"></i> Agregar </button>
                             <br>
                         </div>
