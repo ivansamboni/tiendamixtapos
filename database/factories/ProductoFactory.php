@@ -17,12 +17,20 @@ class ProductoFactory extends Factory
     public function definition(): array
     {
         return [
-            'nombre' => $this->faker->unique()->words(3, true),
-            'descripcion' => $this->faker->sentence(),  // Descripción aleatoria
-            'precio_venta' => $this->faker->randomFloat(10, 5000), // Precio entre 10 y 5000
-            'precio_compra' => $this->faker->randomFloat( 10, 5000), // Precio entre 10 y 5000
-            'stock' => $this->faker->numberBetween(1, 100),
-
+            'codigo_barras' => $this->faker->ean13(),
+            'nombre' => $this->faker->word(),
+            'descripcion' => $this->faker->sentence(),
+             // Suponiendo que tienes 5 marcas
+            'categoria_id' => rand(1, 2), // Suponiendo que tienes 10 categorías
+            'precio_venta' => $this->faker->randomFloat(2, 5, 100),
+            'precio_compra' => $this->faker->randomFloat(2, 3, 80),
+            'iva' => 12,
+            'ganancia' => $this->faker->randomFloat(2, 1, 30),
+            'stock' => rand(10, 200),
+            'proveedor_id' => rand(1, 2), // Suponiendo que tienes 5 proveedores            
+            'created_at' => now(),
+            'updated_at' => now(),            
+            'stock_minimo' => rand(5, 20),
         ];
     }
 }

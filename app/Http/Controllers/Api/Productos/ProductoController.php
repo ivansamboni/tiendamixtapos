@@ -17,12 +17,12 @@ class ProductoController extends Controller
     public function index()
     {
         $productos = Producto::with(['categoria', 'marca', 'proveedor'])
-            ->leftJoin('categorias', 'productos.categoria_id', '=', 'categorias.id')
+            ->leftJoin('categories', 'productos.categoria_id', '=', 'categories.id')
             ->leftJoin('marcas', 'productos.marca_id', '=', 'marcas.id')
-            ->leftJoin('proveedors', 'productos.proveedor_id', '=', 'proveedors.id')
-            ->orderBy('productos.created_at', 'desc')
+            ->leftJoin('sellers', 'productos.proveedor_id', '=', 'sellers.id')
+            ->orderBy('productos.nombre', 'asc')
             ->select('productos.*')
-            ->paginate(5);
+            ->paginate(20);
 
         return response()->json($productos);
     }
@@ -32,10 +32,7 @@ class ProductoController extends Controller
      */
     public function store(Request $request)
     {
-        $file_name1 = '';
-        $file_name2 = '';
-        $file_name3 = '';
-        $file_name4 = '';
+        $file_name1 = '';     
 
         if ($request->hasFile('img1')) {
             $file = $request->file('img1');
@@ -43,28 +40,13 @@ class ProductoController extends Controller
             $file_name1 = $timestamp . $file->getClientOriginalName();
             $file->move(public_path('archivos/folder_img_product'), $file_name1);
         }
-        if ($request->hasFile('img2')) {
-            $file = $request->file('img2');
-            $timestamp = now()->format('His');
-            $file_name2 = $timestamp . $file->getClientOriginalName();
-            $file->move(public_path('archivos/folder_img_product'), $file_name2);
-        
-        }
-        if ($request->hasFile('img3')) {
-            $file = $request->file('img3');
-            $timestamp = now()->format('His');
-            $file_name3 = $timestamp . $file->getClientOriginalName();
-            $file->move(public_path('archivos/folder_img_product'), $file_name3);
-        }
-        if ($request->hasFile('img4')) {
-            $file = $request->file('img4');
-            $timestamp = now()->format('His');
-            $file_name4 = $timestamp . $file->getClientOriginalName();
-            $file->move(public_path('archivos/folder_img_product'), $file_name4);
-        }
+       
 
         $request->validate([
-            'nombre' => 'required|unique:Productos',
+            'nombre' => 'required|unique:productos',
+            'stock' => 'required',
+            'stock_minimo' => 'required',
+            'codigo_barras' => 'unique:productos',
         ]);
 
 
@@ -73,14 +55,16 @@ class ProductoController extends Controller
         $producto->descripcion = $request->input('descripcion');
         $producto->marca_id = $request->input('marca_id');
         $producto->categoria_id = $request->input('categoria_id');
-        $producto->precio = $request->input('precio');
+        $producto->precio_venta = $request->input('precio_venta');
+        $producto->precio_compra = $request->input('precio_compra');
+        $producto->ganancia = $request->input('ganancia');
+        $producto->iva = $request->input('iva');
+        $producto->ibua = $request->input('ibua');
         $producto->stock = $request->input('stock');
+        $producto->stock_minimo = $request->input('stock_minimo');
         $producto->proveedor_id = $request->input('proveedor_id');
         $producto->codigo_barras = $request->input('codigo_barras');
         $producto->img1 = $file_name1;
-        $producto->img2 = $file_name2;
-        $producto->img3 = $file_name3;
-        $producto->img4 = $file_name4;
 
         $producto->save();
 
@@ -183,9 +167,14 @@ class ProductoController extends Controller
         $producto->nombre = $request->input('nombre');
         $producto->descripcion = $request->input('descripcion');
         $producto->marca_id = $request->input('marca_id');
-        $producto->categoria_id = $request->input('categoria_id');
-        $producto->precio = $request->input('precio');
+        $producto->categoria_id = $request->input('categoria_id');        
+        $producto->precio_venta = $request->input('precio_venta');
+        $producto->precio_compra = $request->input('precio_compra');
+        $producto->ganancia = $request->input('ganancia');
+        $producto->iva = $request->input('iva');
+        $producto->ibua = $request->input('ibua');
         $producto->stock = $request->input('stock');
+        $producto->stock_minimo = $request->input('stock_minimo');
         $producto->proveedor_id = $request->input('proveedor_id');
         $producto->codigo_barras = $request->input('codigo_barras');
 

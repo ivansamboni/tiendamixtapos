@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Producto;
-use App\Models\Categoria;
+use App\Models\Category;
 use App\Models\Marca;
 use Illuminate\Http\Request;
 
@@ -45,7 +45,7 @@ class ShowProductController extends Controller
     public function categoriatodo($id)
     {
         // Buscar la categoría
-        $categoria = Categoria::find($id);
+        $categoria = Category::find($id);
 
         // Verificar si la categoría existe
         if (!$categoria) {

@@ -16,18 +16,20 @@ class Producto extends Model
         'marca_id',
         'categoria_id',
         'subcategoria_id',
-        'precio',
+        'precio_venta',
+         'precio_compra',
+         'ganancia',
         'stock',
+        'stock_minimo',
+        'iva',
+        'ibua',
         'codigo_barras',
         'proveedor_id',
-        'img1',
-        'img2',
-        'img3',
-        'img4',
+        'img1',        
     ];
-    public function categoria(): BelongsTo
+    public function categoria()
     {
-        return $this->belongsTo(Categoria::class);
+        return $this->belongsTo(Category::class, 'categoria_id');
     }
        public function marca(): BelongsTo
     {
@@ -35,22 +37,25 @@ class Producto extends Model
     }
     public function proveedor(): BelongsTo
     {
-        return $this->belongsTo(Proveedor::class);
+        return $this->belongsTo(Seller::class);
     }
 
-    public function detallesOrden()
+    public function details()
     {
-        return $this->hasMany(Order_detail::class);
+        return $this->hasMany(Sale_detail::class);
+    }
+
+    public function purchasedetails()
+    {
+        return $this->hasMany(Purchase_detail::class);
+    }
+    public function ajustedetails()
+    {
+        return $this->hasMany(Ajuste_detail::class);
     }
     protected static function booted()
     {
-        static::creating(function ($producto) {
-            $producto->slug = Str::slug($producto->nombre);  // Generar slug al crear
-        });
-
-        static::updating(function ($producto) {
-            $producto->slug = Str::slug($producto->nombre);  // Actualizar slug si cambia el nombre
-        });
+                
     }
 }
 

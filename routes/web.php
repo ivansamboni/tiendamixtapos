@@ -1,24 +1,16 @@
 <?php
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ShowProductController;
-use App\Http\Controllers\OrderController;
-use App\Http\Controllers\MercadoPagoController;
+use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\AjusteController;
+use App\Http\Controllers\SaleController;
 
-Route::get('/mercado', function () {
-    return view('mercadopago');
+
+Route::get('/', function () {
+    return view('welcome');
 });
 
-Route::get('/', [ShowProductController::class, 'carusel'])->name('welcome');
-Route::get('/producto/{id}/{slug?}', [ShowProductController::class, 'productodetalle'])->name('producto.productodetalle');
-Route::get('/categoria/{id}/{slug?}', [ShowProductController::class, 'categoriatodo'])->name('categoria.categoriatodo');
-Route::get('/marca/{id}/{slug?}', [ShowProductController::class, 'marcatodo'])->name('marca.marcatodo');
-Route::get('/searchproducto', [ShowProductController::class, 'searchNombreProducto'])->name('search.searchProducto');
-Route::post('/ordersearch', [OrderController::class, 'ordersearch'])->name('order.search');
-Route::get('/comprar/{id}/{slug?}', [OrderController::class, 'ordershow'])->name('order.show');
-Route::post('/comprar', [OrderController::class, 'store'])->name('order.store');
-Route::get('/ordenes', [OrderController::class, 'searchOrden'])->name('searchOrden');
-Route::post('/carritocomprar', [OrderController::class, 'carritoshow'])->name('carrito.show');
+Route::get('/ticket/{ventaId}', [SaleController::class, 'generarTicket']);
+Route::get('/facturapdf/{id}', [SaleController::class, 'facturaPDF']);
+Route::get('/comprapdf/{id}', [PurchaseController::class, 'compraPDF']);
+Route::get('/ajustepdf/{id}', [AjusteController::class, 'ajustePDF']);
 
-
-Route::post('/create-preference', [MercadoPagoController::class, 'createPaymentPreference'])->name('create.preference');
-Route::get('/checkoutorder', [MercadoPagoController::class, 'index'])->name('checkout.order');
