@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Productos\MarcaController;
 use App\Http\Controllers\Api\Productos\ProductoController;
 use App\Http\Controllers\Api\Productos\SellerController;
 use App\Http\Controllers\Api\Productos\StockController;
+use App\Http\Controllers\ChartsSaleController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\AjusteController;
 use App\Http\Controllers\ImpuestoController;
@@ -40,9 +41,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/ordershow/{id}', [SaleController::class, 'show']);
     //clientes
     Route::apiResource('clientes', ClientController::class);
+    Route::post('clientesearch', [ClientController::class, 'clienteSearch']);
     Route::get('clientefinal/{cedula}', [ClientController::class, 'clienteFinalDatos']);
     //ventas
-    Route::get('ventasfecha', [SaleController::class, 'ventasStats']);
+    Route::get('ventasfecha', [ChartsSaleController::class, 'ventasStats']);
 });
 
 //rutas accecibles para el rol ADMIN
@@ -53,6 +55,7 @@ Route::group(['middleware' => ['auth:sanctum', 'admin']], function () {
     Route::get('marcaslist', [MarcaController::class, 'marcas']);
     Route::apiResource('proveedores', SellerController::class);
     Route::get('proveedoreslist', [SellerController::class, 'proveedores']);
+    Route::post('proveedorsearch', [SellerController::class, 'proveedorSearch']);
     Route::apiResource('productos', ProductoController::class);
     Route::apiResource('impuestos', ImpuestoController::class);
     Route::apiResource('purchase', PurchaseController::class);
@@ -65,7 +68,6 @@ Route::group(['middleware' => ['auth:sanctum', 'admin']], function () {
 });
  
 //Autenticación
-
 
 Route::post('login', [AuthController::class, 'login']);
 Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])->name('password.email')

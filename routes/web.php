@@ -9,8 +9,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/ticket/{ventaId}', [SaleController::class, 'generarTicket']);
-Route::get('/facturapdf/{id}', [SaleController::class, 'facturaPDF']);
+Route::get('/ticket/{uuid}', [SaleController::class, 'generarTicket']);
+Route::get('/facturapdf/{uuid}', [SaleController::class, 'facturaPDF']);
 Route::get('/comprapdf/{id}', [PurchaseController::class, 'compraPDF']);
 Route::get('/ajustepdf/{id}', [AjusteController::class, 'ajustePDF']);
 

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('ajustes', function (Blueprint $table) {
             $table->id();
             $table->string('factura_numero', 100)->unique();
-            $table->string('user_id', 100)->nullable();           
+            $table->foreignId('user_id')->nullable()->constrained('users')->onUpdate('cascade');     
             $table->date('order_date');
             $table->string('status')->default('Ajuste');
             $table->mediumText('descripcion')->nullable();

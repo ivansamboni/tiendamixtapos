@@ -10,7 +10,7 @@ class SellerController extends Controller
 {
     public function index()
     {
-        $proveedor = Seller::orderBy("nombres", "asc")->paginate(5);
+        $proveedor = Seller::orderBy("nombres", "asc")->paginate(20);
         return response()->json($proveedor);
     }
     public function proveedores()
@@ -26,10 +26,10 @@ class SellerController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-         'tipoidentificacion' => 'required',
-            'numidentificacion' => 'required|unique:sellers',
+            'tipoidentificacion' => 'required',
+            'numidentificacion' => 'required|unique:clients,numidentificacion',
             'nombres' => 'required',
-            'email' => 'unique:sellers',
+            'email' => 'nullable|unique:clients,email,NULL,id,deleted_at,NULL',
         ]);
 
         $proveedor = Seller::create($request->all());
@@ -78,5 +78,22 @@ class SellerController extends Controller
     {
         $proveedor = Seller::find($id);
         $proveedor->delete();
+    }
+
+    public function proveedorSearch(Request $request)
+    {
+        $query = Seller::query();
+
+        if ($request->filled('search')) {
+            $searchTerm = '%' . $request->search . '%';
+            $query->where('nombres', 'LIKE', $searchTerm)
+                ->orWhere('apellidos', 'LIKE', $searchTerm)
+                ->orWhere('numidentificacion', 'LIKE', $searchTerm);
+        }
+
+        // Guardamos la paginación en una variable antes de retornarla
+        $seller = $query->orderBy('nombres', 'asc')->paginate(20);
+
+        return response()->json($seller);
     }
 }

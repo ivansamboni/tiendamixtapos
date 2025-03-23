@@ -21,35 +21,47 @@ class SettingController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        $negocio = Setting::orderBy("nombres", "asc")->paginate(5);
-        return response()->json($negocio);
-    }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-       
-        $request->validate([
-            'nombre' => 'required',
-        ]);
-    
-        // Obtiene el primer registro o crea uno si no existe
-        $negocio = Setting::first();
-    
-        if ($negocio) {
-            // Si existe, actualiza los datos
-            $negocio->update($request->all());
-        } else {
-            // Si no existe, crea un nuevo registro
-            $negocio = Setting::create($request->all());
-        }
-    
-        return response()->json($negocio, Response::HTTP_OK);
+{
+    // Validar datos antes de procesar la imagen
+    $request->validate([
+        'nombre' => 'required',
+    ]);
+
+    $logotipo = null;    
+
+    if ($request->hasFile('logotipo')) {
+        $file = $request->file('logotipo');           
+        $logotipo = $file->getClientOriginalName(); // Agrega timestamp para evitar nombres duplicados
+        $file->move(public_path('archivos/images'), $logotipo);
     }
+
+    // Obtener el primer registro o crearlo
+    $negocio = Setting::first();
+
+    // Preparar los datos para actualizar o crear
+    $data = $request->all();
+    if ($logotipo) {
+        $data['logotipo'] = $logotipo;
+    } elseif ($negocio) {
+        $data['logotipo'] = $negocio->logotipo; // Mantener la imagen existente
+    }
+
+    if ($negocio) {
+        // Si existe, actualiza los datos
+        $negocio->update($data);
+    } else {
+        // Si no existe, crea un nuevo registro
+        $negocio = Setting::create($data);
+    }
+
+    return response()->json($negocio, Response::HTTP_OK);
+}
+
  
 
     /**

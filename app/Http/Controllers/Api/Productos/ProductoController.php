@@ -46,7 +46,7 @@ class ProductoController extends Controller
             'nombre' => 'required|unique:productos',
             'stock' => 'required',
             'stock_minimo' => 'required',
-            'codigo_barras' => 'unique:productos',
+            'codigo_barras' => 'unique:productos,codigo_barras',
         ]);
 
 
@@ -161,6 +161,7 @@ class ProductoController extends Controller
         // Validar los datos de entrada
         $request->validate([
             'nombre' => 'required|unique:productos,nombre,' . $producto->id,
+            'codigo_barras' => 'nullable|unique:productos,codigo_barras,' . $producto->id,
         ]);
 
         // Actualizar los demás campos

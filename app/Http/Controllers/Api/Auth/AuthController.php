@@ -5,8 +5,9 @@ use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\Response;
-
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -51,19 +52,55 @@ class AuthController extends Controller
 
     public function store(Request $request)
     {
+        $user = User::withTrashed()->where('numidentificacion', $request->numidentificacion)->first();
+
         $request->validate([
             'tipoidentificacion' => 'required',
-            'numidentificacion' => 'required|unique:users',
+            'numidentificacion' => [
+                'required',
+                Rule::unique('users', 'numidentificacion')->ignore($user?->id),
+            ],
             'nombres' => 'required',
             'telefono' => 'required',
-            'email' => 'required|email|unique:users',
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users', 'email')->ignore($user?->id),
+            ],
             'password' => 'required|min:8|confirmed',
             'role' => 'required',
         ]);
-        $user = User::create($request->all());
+
+        if ($user) {
+            // Restaurar usuario y actualizar datos si es necesario
+            $user->restore();
+            $user->update([
+                'nombres' => $request->nombres,
+                'apellidos' => $request->apellidos,
+                'email' => $request->email,
+                'telefono' => $request->telefono,
+                'password' => Hash::make($request->password), // Hashear contraseña
+                'role' => $request->role,
+            ]);
+
+            return response()->json(['message' => 'Usuario restaurado y actualizado. Ahora puede iniciar sesión.']);
+        }
+
+        // Crear usuario nuevo
+        $user = User::create([
+            'tipoidentificacion' => $request->tipoidentificacion,
+            'numidentificacion' => $request->numidentificacion,
+            'nombres' => $request->nombres,
+            'apellidos' => $request->apellidos,
+            'telefono' => $request->telefono,
+            'email' => $request->email,
+            'password' => Hash::make($request->password), // Hashear contraseña
+            'role' => $request->role,
+        ]);
 
         return response($user, Response::HTTP_CREATED);
     }
+
 
     public function datauser(Request $request)
     {

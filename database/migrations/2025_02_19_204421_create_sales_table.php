@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->unique();
             $table->foreignId('cliente_id')->nullable()->constrained('clients')->onUpdate('cascade');
-            $table->string('user_id', 100)->nullable();
+            $table->foreignId('user_id')->constrained('users')->onUpdate('cascade');
             $table->string('tipo_pago', 100)->nullable();   
             $table->decimal('impuesto', 10, 2)->nullable();        
             $table->decimal('total', 10, 2);  // Total de la orden

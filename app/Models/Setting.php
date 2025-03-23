@@ -13,8 +13,7 @@ class Setting extends Model
         'email',
         'direccion',
         'ciudad',
-        'logotipo',   
-        'iva', 
-        'ibua',     
+        'logotipo',  
+          
     ];
 }

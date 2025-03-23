@@ -1,23 +1,32 @@
 <?php
 
 namespace App\Http\Controllers;
-use Carbon\Carbon;
-use DB;
-use Symfony\Component\HttpFoundation\Response;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Producto;
 use App\Models\Sale;
 use App\Models\Setting;
 use App\Models\Sale_detail;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class SaleController extends Controller
 {
     public function index()
     {
-        $sales = Sale::with(['client', 'user'])
+        $sales = Sale::with(['details.producto', 'client', 'user'])
             ->orderBy('created_at', 'desc')
             ->paginate(20);
+
+        // Agregar la ganancia total por cada venta
+        $sales->getCollection()->transform(function ($sale) {
+            // Calcular la ganancia total de esta venta
+            $sale->total_ganancia = $sale->details->sum(function ($detail) {
+                return ($detail->producto->ganancia ?? 0) * $detail->cantidad;
+            });
+
+            return $sale;
+        });
+
         return response()->json($sales);
     }
 
@@ -80,16 +89,16 @@ class SaleController extends Controller
 
         return response()->json([
             'message' => 'Venta creada con éxito',
-            'ticket_url' => url("/ticket/{$sale->id}") // URL para abrir el PDF
+            'ticket_url' => url("/ticket/{$sale->uuid}") // URL para abrir el PDF
         ]);
 
         //return response($orden, Response::HTTP_CREATED);
     }
 
-    public function generarTicket($id)
+    public function generarTicket($uuid)
     {
         $negocio = Setting::first();
-        $orden = Sale::with(['details.producto', 'client', 'user'])->find($id);
+        $orden = Sale::with(['details.producto', 'client', 'user'])->where('uuid', $uuid)->firstOrFail();
         $pdf = Pdf::loadView('facturas.ticketFactura', compact('orden', 'negocio'))
             ->setPaper([0, 0, 226.77, 841.89]); // Tamaño de 58mm de ancho en puntos
 
@@ -97,11 +106,11 @@ class SaleController extends Controller
 
     }
 
-    public function facturaPDF($id)
+    public function facturaPDF($uuid)
     {
         $negocio = Setting::first();
-        $orden = Sale::with(['details.producto', 'client', 'user'])->find($id);
-        $pdf = Pdf::loadView('facturas.facturaPDF', compact('orden', 'negocio'));
+        $orden = Sale::with(['details.producto', 'client', 'user'])->where('uuid', $uuid)->firstOrFail();
+        $pdf = Pdf::loadView('facturas.facturaPdf', compact('orden', 'negocio'));
 
         return $pdf->stream('ticket.pdf');
     }
@@ -113,60 +122,30 @@ class SaleController extends Controller
         return response()->json($orden);
     }
 
-    public function ventasStats()
-    {
-
-        $dia = Sale::whereDate('created_at', today())
-            ->with('details.producto') // Carga la relación
-            ->get()
-            ->flatMap(function ($sale) {
-                return $sale->details->map(function ($detail) {
-                    return $detail->producto->ganancia * $detail->cantidad;
-                });
-            })->sum();
-
-        $semana = Sale::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])
-            ->with('details.producto')
-            ->get()
-            ->flatMap(fn($sale) => $sale->details->map(fn($detail) => $detail->producto->ganancia * $detail->cantidad))
-            ->sum();
-
-        $mes = Sale::whereBetween('created_at', [now()->startOfMonth(), now()->endOfMonth()])
-            ->with('details.producto')
-            ->get()
-            ->flatMap(fn($sale) => $sale->details->map(fn($detail) => $detail->producto->ganancia * $detail->cantidad))
-            ->sum();
-
-        $topProductos = Sale_detail::select('producto_id', DB::raw('SUM(cantidad) as total_vendido'))
-            ->groupBy('producto_id') // Agrupa por producto
-            ->orderByDesc('total_vendido') // Ordena de mayor a menor
-            ->with('producto') // Carga la relación del producto
-            ->limit(10) // Limita a los 10 más vendidos
-            ->get();
-
-        return response()->json([
-            'gananciaHoy' => $dia,
-            'gananciaSemana' => $semana,
-            'gananciaMes' => $mes,
-            'masVendido' => $topProductos,
-        ]);
-
-    }
-
     public function filtroFecha(Request $request)
     {
         $request->validate([
             'fechaini' => 'required|date',
             'fechafin' => 'required|date|after_or_equal:fechaini',
         ]);
-        
+
         $fechaini = Carbon::parse($request->input('fechaini'))->startOfDay();
-        $fechafin = Carbon::parse($request->input('fechafin'))->endOfDay(); 
+        $fechafin = Carbon::parse($request->input('fechafin'))->endOfDay();
 
         $query = Sale::whereBetween('created_at', [$fechaini, $fechafin])
-        ->with(['client', 'user'])
-        ->orderBy('created_at', 'desc')
-        ->paginate(20);
+            ->with(['details.producto', 'client', 'user'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(20);
+
+        // Agregar la ganancia total por cada venta
+        $query->getCollection()->transform(function ($sale) {
+            // Calcular la ganancia total de esta venta
+            $sale->total_ganancia = $sale->details->sum(function ($detail) {
+                return ($detail->producto->ganancia ?? 0) * $detail->cantidad;
+            });
+
+            return $sale;
+        });
 
         return response()->json($query);
     }
