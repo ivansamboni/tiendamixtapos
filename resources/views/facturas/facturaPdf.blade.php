@@ -3,119 +3,185 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Factura de Venta</title>
-    <link rel="stylesheet" href="{{ public_path('bootstrap/css/bootstrap.min.css') }}">
+    <title>Recibo de Venta</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 11px;
+            margin: 20px;
+        }
 
+        .text-right {
+            text-align: right;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 5px;
+        }
+
+        .no-border th,
+        .no-border td {
+            border: none;
+        }
+
+        h2,
+        h3 {
+            margin: 5px 0;
+        }
+
+        .highlight {
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .observaciones {
+            margin-top: 20px;
+            font-size: 10px;
+        }
+    </style>
 </head>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 20px;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        border: 1px solid #ddd;
-    }
-
-    th,
-    td {
-        padding: 8px;
-        border: 1px solid #ddd;
-    }
-
-    th {
-        background-color: #f4f4f4;
-    }
-
-    .text-left {
-        text-align: left;
-    }
-
-    .text-right {
-        text-align: right;
-    }
-</style>
 
 <body>
-    <header>
-        <!-- Encabezado -->
-        <div class="row">
-            <div class="col-md-6">
-                <div class="text-center">
-                    <img src="{{ public_path('archivos/images/' . ($negocio->logotipo ?? 'default.png')) }}"
-                        width="60" alt="Logotipo">
-                    <br>
-                    <h4>{{ $negocio->nombre ?? '' }}</h4>
-                    <small class="titulo">
-                        NIT:{{ $negocio->nit ?? '' }}
-                        TEl:{{ $negocio->telefonos ?? '' }}
-                    </small>
-                </div>
-            </div>
-            <br>
-            <div class="col-md-6 text-left">
-                <h4 class="blue-header">FACTURA</h4>
-                <p><strong>N°:</strong> {{ $orden->id }}</p>
-                <p><strong>Fecha:</strong> {{ $orden->created_at->format('d/m/Y H:i') }}</p>
 
-            </div>
-        </div>
-    </header>
-    <hr>
+    <!-- Encabezado -->
+    <table class="no-border">
+        <tr>
+            <td style="width: 30%;">
+                <img src="{{ public_path('archivos/images/' . ($negocio->logotipo ?? 'default.png')) }}" width="90"
+                    alt="Logotipo">
+            </td>
+            <td class="text-center">
+                <h2>{{ $negocio->nombre ?? 'Nombre de Empresa' }}</h2>
 
-    <!-- Datos del Cliente -->
-    <div class="row">
-        <div class="col-md-6">
+                <span>NIT: {{ $negocio->nit ?? '' }}</span><br>
+                <span>{{ $negocio->direccion ?? '' }}</span><br>
+                <span>Tel: {{ $negocio->telefonos ?? '' }}</span><br>
+                <span>{{ $negocio->email ?? '' }}</span><br>
 
-            <h5>FACTURAR A:</h5>
-            <p><strong>Nombre:</strong> {{ $orden->client->nombres }} {{ $orden->client->apellidos }}</p>
-            <p><strong>CC/NIT:</strong> {{ $orden->client->numidentificacion }}</p>
-            <p><strong>Tel:</strong> {{ $orden->client->telefono }}</p>
-            <p><strong>Dirección:</strong> {{ $orden->client->ubicacion }}</p>
-        </div>
-    </div>
-    </div>
-    <hr>
-    <!-- Tabla de productos -->
-    <table class="table table-bordered">
-        <thead class="thead-dark">
+            </td>
+            <td class="text-right">
+                <strong>Recibo de Venta</strong><br>
+                <span>FM {{ $orden->factura_numero }}</span><br>
+                <span>Fecha: {{ $orden->created_at->format('Y-m-d') }}</span><br>
+                <span>Hora: {{ $orden->created_at->format('H:i:s') }}</span>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Cliente y vendedor -->
+    <table style="margin-top: 10px;">
+        <td>
+            <strong>Cliente:</strong>{{ $orden->client->nombres ?? '' }} {{ $orden->client->apellidos ?? '' }}<br>
+            <strong>NIT/CC:</strong> {{ $orden->client->numidentificacion ?? '' }}<br>
+            <strong>Dirección:</strong> {{ $orden->client->ubicacion ?? 'N/A' }}<br>
+            <strong>Teléfono:</strong> {{ $orden->client->telefono ?? 'N/A' }}
+        </td>
+        <td>
+            <strong>Vendedor:</strong>{{ $orden->user->nombres ?? '' }} {{ $orden->user->apellidos ?? '' }}<br>
+            <strong>CC:</strong> {{ $orden->user->numidentificacion ?? '' }}<br>
+            <strong>Correo:</strong> {{ $orden->user->email ?? '' }}
+        </td>
+
+        </tr>
+    </table>
+
+    <!-- Productos -->
+    <table style="margin-top: 15px;">
+        <thead>
             <tr>
-                <th>Producto</th>
-                <th class="text-center">CANT</th>
-                <th class="text-right">P.UNI</th>
-                <th class="text-right">Iva</th>
-                <th class="text-right">Sub Total</th>
+                <th>Código</th>
+                <th>Descripción</th>
+                <th>U/M</th>
+                <th>Cant</th>
+                <th class="text-right">V. Unit</th>
+                <th class="text-right">Impuesto</th>
+                <th class="text-right">Total</th>
             </tr>
         </thead>
         <tbody>
+            @php
+                $subtotalGeneral = 0;
+                $totalIVA = 0;
+                $totalIBUA = 0;
+                $totalIPC = 0;
+            @endphp
             @foreach ($orden->details as $detalle)
+                @php
+                    $linea = $detalle->cantidad * $detalle->precio_unitario;
+                    $iva = $detalle->iva ?? 0;
+                    $ibua = $detalle->ibua ?? 0;
+                    $ipc = $detalle->ipc ?? 0;
+    
+                    $subtotalGeneral += $linea;
+                    $totalIVA += $iva;
+                    $totalIBUA += $ibua;
+                    $totalIPC += $ipc;
+                    $valorImpuesto = $iva + $ibua + $ipc;
+                @endphp
                 <tr>
+                    <td>{{ $detalle->producto->codigo_barras ?? 'N/A' }}</td>
                     <td>{{ $detalle->producto->nombre }}</td>
-                    <td class="text-center">{{ $detalle->cantidad }}</td>
-                    <td class="text-right">${{ number_format($detalle->precio_unitario, 2) }}</td>
-                    <td class="text-right"><small>${{ number_format($detalle->iva, 2) }}</small></td>
-                    <td class="text-right">
-                        <small>${{ number_format($detalle->cantidad * $detalle->precio_unitario + $detalle->iva, 2) }}</small>
-                    </td>
+                    <td>{{ $detalle->producto->unidad ?? 'UND' }}</td>
+                    <td class="text-center">{{ number_format($detalle->cantidad, 2) }}</td>
+                    <td class="text-right">{{ number_format($detalle->precio_unitario, 2) }}</td>
+                    <td class="text-center">{{ number_format($valorImpuesto, 2) }}</td>
+                    <td class="text-right">{{ number_format($linea + $valorImpuesto, 2) }}</td>
                 </tr>
             @endforeach
         </tbody>
     </table>
-
-    <hr>
-
+    
     <!-- Totales -->
-    <div class="row">
-        <div class="col-md-8"></div>
-        <div class="col-md-4">
-            <div class="total-box">
-                <h4><strong>Total:</strong> ${{ number_format($orden->total, 2) }}</h4>
-                <p><strong>Forma de pago:</strong> {{ $orden->tipo_pago }}</p>
-            </div>
-        </div>
+    <table style="margin-top: 10px;">
+        <tr>
+            <td class="text-right"><strong>Subtotal:</strong></td>
+            <td class="text-right">{{ number_format($subtotalGeneral, 2) }}</td>
+        </tr>
+        <tr>
+            <td class="text-right"><strong>Total IVA:</strong></td>
+            <td class="text-right">{{ number_format($totalIVA, 2) }}</td>
+        </tr>
+        @if ($totalIBUA > 0)
+            <tr>
+                <td class="text-right"><strong>Total IBUA:</strong></td>
+                <td class="text-right">{{ number_format($totalIBUA, 2) }}</td>
+            </tr>
+        @endif
+        @if ($totalIPC > 0)
+            <tr>
+                <td class="text-right"><strong>Total IMPOCONSUMO:</strong></td>
+                <td class="text-right">{{ number_format($totalIPC, 2) }}</td>
+            </tr>
+        @endif
+        <tr>
+            <td class="text-right highlight">Total a Pagar:</td>
+            <td class="text-right highlight">
+                ${{ number_format($subtotalGeneral + $totalIVA + $totalIBUA + $totalIPC, 2) }}
+            </td>
+        </tr>
+        <tr>
+            <td class="text-right">Condición de Pago:</td>
+            <td class="text-right">{{ $orden->forma_pago_nombre }} - {{ $orden->metodo_pago_nombre }}</td>
+        </tr>
+    </table>
+    
+
+    <!-- Observaciones -->
+    <div class="observaciones">
+        <p><strong>Observaciones:</strong> {{ $orden->observaciones ?? 'Gracias por su compra.' }}</p>
+        <p>Este documento  de venta no es una factura.</p>
     </div>
 
 </body>

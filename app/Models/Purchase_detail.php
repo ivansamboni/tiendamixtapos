@@ -8,7 +8,7 @@ class Purchase_detail extends Model
 {
     
     protected $fillable = ['purchase_id', 'producto_id', 'cantidad', 
-    'precio_unitario','iva'];
+    'precio_unitario','iva','ibua','ipc'];
     public function purchase()
     {
         return $this->belongsTo(PurchaseOrder::class);
@@ -16,7 +16,5 @@ class Purchase_detail extends Model
     public function producto()
     {
         return $this->belongsTo(Producto::class);
-    }
-
-
+    }  
 }

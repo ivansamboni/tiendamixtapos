@@ -25,6 +25,25 @@ class AuthController extends Controller
         return response($user);
     }
 
+    public function userSearch(Request $request)
+    {
+        $query = User::query();
+
+        if ($request->filled('search')) {
+            $searchTerm = '%' . $request->search . '%';
+
+            $query->where(function ($q) use ($searchTerm) {
+                foreach (['nombres', 'apellidos', 'numidentificacion', 'email'] as $field) {
+                    $q->orWhere($field, 'LIKE', $searchTerm);
+                }
+            });
+        }
+
+        $users = $query->orderBy('nombres', 'asc')->paginate(20);
+
+        return response()->json($users);
+    }
+
     public function update(Request $request, User $user)
     {
 
@@ -79,6 +98,7 @@ class AuthController extends Controller
                 'apellidos' => $request->apellidos,
                 'email' => $request->email,
                 'telefono' => $request->telefono,
+                'direccion' => $request->direccion,
                 'password' => Hash::make($request->password), // Hashear contraseña
                 'role' => $request->role,
             ]);
@@ -94,6 +114,7 @@ class AuthController extends Controller
             'apellidos' => $request->apellidos,
             'telefono' => $request->telefono,
             'email' => $request->email,
+            'direccion' => $request->direccion,
             'password' => Hash::make($request->password), // Hashear contraseña
             'role' => $request->role,
         ]);

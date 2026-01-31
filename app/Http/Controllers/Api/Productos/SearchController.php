@@ -19,30 +19,25 @@ class SearchController extends Controller
             return response()->json([], 200); // Si no hay palabras válidas, retorna vacío
         }
 
-        $productos = Producto::select('id', 'nombre', 'precio_venta', 'stock')
-            ->where(function ($query) use ($palabrasValidas) {
+        $productos = Producto::where(function ($query) use ($palabrasValidas) {
                 foreach ($palabrasValidas as $palabra) {
                     $query->orWhere('nombre', 'LIKE', '%' . $palabra . '%');
                 }
             })->get();
 
-
-
         return response()->json($productos);
     }
 
     public function searcCodigoBarrasProducto($codigo)
-    {
-        $producto = Producto::where('codigo_barras', $codigo)
-            ->orWhere('id', $codigo)
-            ->firstOrFail();
+{
+    $producto = Producto::where('codigo_barras', $codigo)->first();
 
-        if (!$producto) {
-            return response()->json(['error' => 'Producto no encontrado'], 404);
-        }
-
-        return response()->json($producto);
+    if (!$producto) {
+        return response()->json(['error' => 'Producto no encontrado'], 404);
     }
+
+    return response()->json($producto);
+}
 
 
     public function searchCodigoPaginate($codigo)

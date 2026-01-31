@@ -60,18 +60,14 @@ class AjusteController extends Controller
 
             foreach ($request->input('itemselected') as $producto) {
                 $productoDB = Producto::findOrFail($producto['id']);
-                //$precioUnitario = $productoDB->precio_compra;              
-
-                $preciocompra = $producto['precio_compra'];
-                $precioventa = $producto['precio_venta'];
+                //$precioUnitario = $productoDB->precio_compra;             
+               
                 $stock_nuevo = $producto['stock'];
                 $stock_cambio = $producto['stock_cambio'];
 
                 // Actualizar stock
                 $productoDB->update(['stock' => $stock_nuevo]);
-                $productoDB->update(['precio_compra' => $preciocompra]);
-                $productoDB->update(['precio_venta' => $precioventa]);
-
+               
                 // Guardar el detalle de la orden
                 Ajuste_detail::create([
                     'ajuste_id' => $ajuste->id,
@@ -92,7 +88,7 @@ class AjusteController extends Controller
             DB::rollBack();
 
             return response()->json([
-                'error' => 'No se pudo completar la venta',
+                'error' => 'No se pudo completar',
                 'message' => $e->getMessage()
             ], 400);
         }

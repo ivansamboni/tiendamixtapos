@@ -93,6 +93,8 @@ th {
                     <th class="text-center">Cantidad</th>
                     <th class="text-right">Precio Compra</th>
                     <th class="text-right">IVA</th>
+                    <th class="text-right">IBUA</th>
+                    <th class="text-right">IPC</th>
                     <th class="text-right">Subtotal</th>
                 </tr>
             </thead>
@@ -103,7 +105,9 @@ th {
                         <td class="text-center">{{ $detalle->cantidad }}</td>
                         <td class="text-right">${{ number_format($detalle->precio_unitario, 2) }}</td>
                         <td class="text-right">${{ number_format($detalle->iva, 2) }}</td>
-                        <td class="text-right">${{ number_format($detalle->cantidad * $detalle->precio_unitario + $detalle->iva, 2) }}</td>
+                        <td class="text-right">${{ number_format($detalle->ibua, 2) }}</td>
+                        <td class="text-right">${{ number_format($detalle->ipc, 2) }}</td>
+                        <td class="text-right">${{ number_format($detalle->cantidad * $detalle->precio_unitario + $detalle->iva +$detalle->ibua + $detalle->ipc, 2) }}</td>
                     </tr>
                 @endforeach
             </tbody>

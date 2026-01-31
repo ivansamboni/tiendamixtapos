@@ -5,15 +5,23 @@ use App\Http\Controllers\Api\Productos\MarcaController;
 use App\Http\Controllers\Api\Productos\ProductoController;
 use App\Http\Controllers\Api\Productos\SellerController;
 use App\Http\Controllers\Api\Productos\StockController;
+use App\Http\Controllers\BalanceController;
+use App\Http\Controllers\CajaController;
+use App\Http\Controllers\CajaMovimientoController;
 use App\Http\Controllers\ChartsSaleController;
+use App\Http\Controllers\NotasCompraController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\AjusteController;
 use App\Http\Controllers\ImpuestoController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\Api\Productos\SearchController;
+use App\Http\Controllers\UnitMeasureController;
 use App\Http\Middleware\AdminMiddleware;
+use App\Models\UnitMeasure;
 use Laravel\Fortify\Http\Controllers\PasswordResetLinkController;
 use Laravel\Fortify\Http\Controllers\ResetPasswordController;
 use Laravel\Fortify\Http\Controllers\NewPasswordController;
@@ -37,14 +45,25 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     //stock
     Route::apiResource('stock', StockController::class);    
     Route::post('/vender', [SaleController::class, 'store']);
+
     Route::get('/orderlist', [SaleController::class, 'index']);
-    Route::get('/ordershow/{id}', [SaleController::class, 'show']);
-    //clientes
+    Route::get('/ordershow/{id}', [SaleController::class, 'show']);  
+    Route::post('ventafechaexcel', [SaleController::class, 'exportSales']);
     Route::apiResource('clientes', ClientController::class);
     Route::post('clientesearch', [ClientController::class, 'clienteSearch']);
     Route::get('clientefinal/{cedula}', [ClientController::class, 'clienteFinalDatos']);
-    //ventas
-    Route::get('ventasfecha', [ChartsSaleController::class, 'ventasStats']);
+    //ventas    
+    Route::get('gananciasfecha', [ChartsSaleController::class, 'gananciasfecha']);
+    Route::get('ventasfecha', [ChartsSaleController::class, 'ventasfecha']);
+    Route::post('balances', [BalanceController::class, 'balance']);
+    //Cuadre de cajas
+    Route::apiResource('cajas', CajaController::class);
+    Route::get('validarcaja/{cajero_id}', [CajaController::class, 'validarAperturaCaja']);    
+    Route::post('cajasearch', [CajaController::class, 'cajaSearch']);
+    Route::apiResource('cajasmovimientos', CajaMovimientoController::class);
+
+    //creditos
+    Route::apiResource('credits', PaymentController::class);
 });
 
 //rutas accecibles para el rol ADMIN
@@ -55,12 +74,18 @@ Route::group(['middleware' => ['auth:sanctum', 'admin']], function () {
     Route::get('marcaslist', [MarcaController::class, 'marcas']);
     Route::apiResource('proveedores', SellerController::class);
     Route::get('proveedoreslist', [SellerController::class, 'proveedores']);
-    Route::post('proveedorsearch', [SellerController::class, 'proveedorSearch']);
+    Route::post('proveedorsearch', [SellerController::class, 'proveedorSearch']);   
+    Route::post('ventasearch', [SaleController::class, 'saleSearch']);
     Route::apiResource('productos', ProductoController::class);
     Route::apiResource('impuestos', ImpuestoController::class);
-    Route::apiResource('purchase', PurchaseController::class);
-    Route::post('comprafecha', [PurchaseController::class, 'filtroFecha']);
-    Route::post('ventafecha', [SaleController::class, 'filtroFecha']);
+    Route::apiResource('unidadmedidas', UnitMeasureController::class);
+    Route::apiResource('purchase', PurchaseController::class); 
+    Route::apiResource('expenses', ExpenseController::class);
+    Route::post('ventafechaexcel', [SaleController::class, 'exportSales']);
+    Route::post('comprafechaexcel', [PurchaseController::class, 'exportPurchases']);
+    Route::apiResource('notas', NotasCompraController::class);
+    Route::get('comprasearch/{factura_numero}', [PurchaseController::class, 'compraSearch']);
+    Route::post('importproductoexcel', [ProductoController::class, 'importProductoExcel']);
     Route::post('ajustefecha', [AjusteController::class, 'filtroFecha']);
     Route::apiResource('ajuste', AjusteController::class);
     Route::apiResource('settings', SettingController::class);
@@ -68,7 +93,7 @@ Route::group(['middleware' => ['auth:sanctum', 'admin']], function () {
 });
  
 //Autenticación
-
+Route::post('usersearch', [AuthController::class, 'userSearch']);
 Route::post('login', [AuthController::class, 'login']);
 Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])->name('password.email')
     ->middleware('guest');

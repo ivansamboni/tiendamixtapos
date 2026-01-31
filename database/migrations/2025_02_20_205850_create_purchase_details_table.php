@@ -17,6 +17,8 @@ return new class extends Migration
             $table->foreignId('producto_id')->constrained('productos')->onUpdate('cascade');
             $table->integer('cantidad');
             $table->decimal('iva', 10, 2)->nullable();
+            $table->decimal('ibua', 10, 2)->nullable();
+            $table->decimal('ipc', 10, 2)->nullable();
             $table->decimal('precio_unitario', 10, 2)->nullable();
             $table->timestamps();
         });

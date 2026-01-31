@@ -5,6 +5,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Client;
+use Illuminate\Validation\Rule;
 
 class ClientController extends Controller
 {
@@ -35,15 +36,42 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
+        $cliente = Client::withTrashed()->where('numidentificacion', $request->numidentificacion)->first();
+
         $request->validate([
             'tipoidentificacion' => 'required',
-            'numidentificacion' => 'required|unique:clients,numidentificacion',
+            'numidentificacion' => [
+                'required',
+                Rule::unique('clients', 'numidentificacion')->ignore($cliente?->id),
+            ],
             'nombres' => 'required',
-            'email' => 'nullable|unique:clients,email,NULL,id,deleted_at,NULL',
+            //'telefono' => 'required',
+            //'email' => ['required','email', Rule::unique('clients', 'email')->ignore($cliente?->id),],
         ]);
 
-        $cliente = Client::create($request->all());
-        return response($cliente, Response::HTTP_CREATED);
+        if ($cliente) {
+            // Restaurar si estaba borrado y actualizar
+            $cliente->restore();
+            $cliente->update([
+                'tipoidentificacion' => $request->tipoidentificacion,
+                'nombres' => $request->nombres,
+                'apellidos' => $request->apellidos,
+                'telefono' => $request->telefono,
+                'email' => $request->email,
+                'ubicacion' => $request->ubicacion,
+            ]);
+        } else {
+            // Crear nuevo cliente
+            $cliente = Client::create([
+                'tipoidentificacion' => $request->tipoidentificacion,
+                'numidentificacion' => $request->numidentificacion,
+                'nombres' => $request->nombres,
+                'apellidos' => $request->apellidos,
+                'telefono' => $request->telefono,
+                'email' => $request->email,
+                'ubicacion' => $request->ubicacion,
+            ]);
+        }
     }
 
     /**
@@ -91,19 +119,33 @@ class ClientController extends Controller
     }
 
     public function clienteSearch(Request $request)
-    {
-        $query = Client::query();
+{
+    $query = Client::query();
 
-        if ($request->filled('search')) {
-            $searchTerm = '%' . $request->search . '%';
-            $query->where('nombres', 'LIKE', $searchTerm)
-                ->orWhere('apellidos', 'LIKE', $searchTerm)
-                ->orWhere('numidentificacion', 'LIKE', $searchTerm);
-        }
+    if ($request->filled('search')) {
+        $searchTerm = $request->search;
 
-        // Guardamos la paginación en una variable antes de retornarla
-        $clientes = $query->orderBy('nombres', 'asc')->paginate(20);
+        // Dividimos por espacios y quitamos vacíos
+        $terms = array_filter(explode(' ', $searchTerm));
 
-        return response()->json($clientes);
+        $query->where(function ($q) use ($terms) {
+            foreach ($terms as $term) {
+                $term = "%{$term}%";
+
+                $q->where(function ($sub) use ($term) {
+                    $sub->orWhere('nombres', 'LIKE', $term)
+                        ->orWhere('apellidos', 'LIKE', $term)
+                        ->orWhere('numidentificacion', 'LIKE', $term)
+                        ->orWhere('email', 'LIKE', $term);
+                });
+            }
+        });
     }
+
+    $clientes = $query->orderBy('nombres', 'asc')->paginate(20);
+
+    return response()->json($clientes);
+}
+
+
 }

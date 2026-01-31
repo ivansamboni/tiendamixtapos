@@ -13,6 +13,7 @@ class PurchaseOrder extends Model
         'tipo_pago',
         'order_date',
         'tipo _pago',
+        'tipo_compra',
         'status',
         'total'
     ];
@@ -29,6 +30,23 @@ class PurchaseOrder extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+    public function notas()
+    {
+        return $this->hasMany(NotasCompra::class);
+    }
+
+    public function getTotalConNotasAttribute()
+    {
+        $credito = $this->notas()->where('tipo', 'credito')->sum('monto');
+        $debito = $this->notas()->where('tipo', 'debito')->sum('monto');
+
+        return $this->total + $debito - $credito;
+    }
+
+    public function expense()
+    {
+        return $this->hasOne(Expense::class, 'purchase_order_id');
     }
 
 }

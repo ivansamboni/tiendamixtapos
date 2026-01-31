@@ -16,7 +16,8 @@ return new class extends Migration {
             $table->foreignId('user_id')->nullable()->constrained('users')->onUpdate('cascade');
             $table->foreignId('seller_id')->nullable()->constrained('sellers')->onUpdate('cascade'); // Proveedor
             $table->date('order_date');
-            $table->string('status')->default('pendiente');
+            $table->string('status')->default('Pagado');
+            $table->enum('tipo_compra', ['Costo', 'Gasto'])->default('Costo');
             $table->string('tipo_pago', 100)->nullable();
             $table->decimal('total', 10, 2);  // Total de la orden
             $table->timestamps();
